@@ -30,10 +30,10 @@ async function getCmsSeo(slug: string): Promise<CmsSeoRecord | null> {
 export async function generateMetadata(): Promise<Metadata> {
   const cms = await getCmsSeo("home");
   const title =
-    cms?.seoTitle?.trim() || "Online Casino Reviews, Bonuses & Game Guides";
+    cms?.seoTitle?.trim() || "Test Online Casino Reviews, Bonuses & Game Guides";
   const description =
     cms?.seoDesc?.trim() ||
-    "Compare online casinos with independent reviews, bonus breakdowns, game guides, and responsible iGaming information. Explore top picks, features, and how offers work.";
+    "Compare Online casinos with independent reviews, bonus breakdowns, game guides, and responsible iGaming information. Explore top picks, features, and how offers work.";
   return {
     alternates: buildLocaleAlternates("/"),
     title: {
