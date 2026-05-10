@@ -11,7 +11,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { SITE_URL } from "@/lib/seo";
 
 const NAV_LINKS = [
-  { label: "Casino", href: "/casinos" },
+  { label: "Casinos", href: "/casinos" },
   { label: "Games", href: "/games" },
   { label: "Bonus", href: "/bonus" },
   { label: "Blog", href: "/blog" },
