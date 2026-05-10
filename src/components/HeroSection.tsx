@@ -82,7 +82,7 @@ export function HeroSection() {
             mx: "auto",
           }}
         >
-          Expert reviews, exclusive bonuses, and trusted recommendations for the
+          Experts reviews, exclusive bonuses, and trusted recommendations for the
           ultimate online casino experience
         </Typography>
 
