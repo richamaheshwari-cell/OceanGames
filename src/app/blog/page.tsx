@@ -14,7 +14,7 @@ import { readPageParam, type QueryMap } from "@/lib/pagination-query";
 import { BlogHero } from "./BlogHero";
 import { FeaturedArticlesServer } from "./FeaturedArticlesServer";
 import { AllCasinoArticlesServer } from "./AllCasinoArticlesServer";
-
+//added comment to test ci/cd pipeline
 const TITLE = "Casino Blogs & Insights | Expert Guides | TheOceanGame";
 const DESC =
   "Master casino strategies, discover winning guides, stay updated with platform news, and explore the latest iGaming industry trends.";
