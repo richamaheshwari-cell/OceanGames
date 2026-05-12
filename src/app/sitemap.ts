@@ -15,12 +15,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
-    { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "daily", priority: 1 },
-    { url: `${SITE_URL}/casinos`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/games`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/bonus`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/blog`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
-    { url: `${SITE_URL}/news`, lastModified: now, changeFrequency: "daily", priority: 0.9 },
+    { url: `${SITE_URL}/`, lastModified: now, changeFrequency: "daily", priority: 1.0 },
+    { url: `${SITE_URL}/casinos`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${SITE_URL}/casinos/insights`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE_URL}/games`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${SITE_URL}/games/insights`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${SITE_URL}/bonus`, lastModified: now, changeFrequency: "daily", priority: 0.8 },
+    { url: `${SITE_URL}/bonus/highlights`, lastModified: now, changeFrequency: "weekly", priority: 0.8 },
     { url: `${SITE_URL}/privacy`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${SITE_URL}/terms`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
@@ -28,9 +29,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/responsible-gaming`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
   ];
 
-  const articleEntries: MetadataRoute.Sitemap = dynamicEntries.map((e) => ({
+  // Exclude blog, news, and article URLs from the main sitemap
+  const filteredEntries = dynamicEntries.filter(
+    (e) =>
+      !e.path.startsWith("/blog/") &&
+      !e.path.startsWith("/news/") &&
+      !e.path.startsWith("/casino-articles/") &&
+      !e.path.startsWith("/game-articles/") &&
+      !e.path.startsWith("/bonus-articles/") &&
+      !e.path.match(/\?page=\d+/)
+  );
+
+  const articleEntries: MetadataRoute.Sitemap = filteredEntries.map((e) => ({
     url: `${SITE_URL}${e.path.startsWith("/") ? "" : "/"}${e.path}`,
-    lastModified: e.lastmod ? new Date(e.lastmod) : now,
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
