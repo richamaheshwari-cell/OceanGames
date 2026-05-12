@@ -93,7 +93,7 @@ export default async function CmsPage({ params }: { params: Promise<{ slug: stri
           "@keyframes articleFadeIn": { "0%": { opacity: 0 }, "100%": { opacity: 1 } },
         }}
       >
-        <Typography component="h1" variant="h3" sx={{ fontWeight: 700, mb: 3, fontSize: { xs: "28px", md: "38px" } }}>
+        <Typography component="title" variant="h3" sx={{ fontWeight: 700, mb: 3, fontSize: { xs: "28px", md: "38px" } }}>
           {h1Title}
         </Typography>
         {content ? (

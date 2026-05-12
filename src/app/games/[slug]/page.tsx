@@ -237,7 +237,7 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
                       </Box>
                     )}
                     <Box sx={{ minWidth: 0 }}>
-                      <Typography component="h1" sx={{ fontWeight: 800, fontSize: { xs: "1.45rem", md: "2rem" }, color: TEXT_PRIMARY, letterSpacing: "-0.02em", lineHeight: 1.2, mb: 1 }}>
+                      <Typography component="title" sx={{ fontWeight: 800, fontSize: { xs: "1.45rem", md: "2rem" }, color: TEXT_PRIMARY, letterSpacing: "-0.02em", lineHeight: 1.2, mb: 1 }}>
                         {game.title}
                       </Typography>
                       <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 1.25 }}>

@@ -176,7 +176,7 @@ export async function AllCasinoArticlesServer({
                         <CalendarToday
                           sx={{ fontSize: 14, color: "primary.main" }}
                         />
-                        {formatPublishedDate(article.publishDate)}
+                        Published: {formatPublishedDate(article.publishDate)} UTC
                       </Box>
                       <Box
                         sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
@@ -186,7 +186,11 @@ export async function AllCasinoArticlesServer({
                         />
                         {article.readTime ?? "—"} read
                       </Box>
+
+                      
                     </Box>
+
+                    
 
                     <Typography
                       variant="subtitle1"

@@ -14,7 +14,7 @@ import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { contentToMetadata, getTitle, getWordCountFromHtml } from "@/lib/seo";
 import { tiptapJsonToHtml } from "@/lib/tiptap-server";
-
+import EditIcon from "@mui/icons-material/Edit";
 type Editor = { id: string; name: string; avatarUrl?: string | null };
 type RelatedItem = {
   id: string;
@@ -71,7 +71,8 @@ function imgSrc(url: string | null | undefined) {
 }
 
 async function getNews(slug: string): Promise<NewsResponse | null> {
-  const base = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
   let res = await fetch(`${base}/api/v1/public/news/${slug}`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
@@ -258,7 +259,7 @@ export default async function NewsArticlePage({
           }}
         >
           <Typography
-            component="h1"
+            component="title"
             variant="h3"
             sx={{
               fontSize: { xs: "28px", md: "38px" },
@@ -282,22 +283,37 @@ export default async function NewsArticlePage({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <CalendarToday sx={{ fontSize: 18, color: "primary.main" }} />
-              {formatPublishedDate(news.publishDate)}
+              Published: {formatPublishedDate(news.publishDate)} UTC
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Schedule sx={{ fontSize: 18, color: "primary.main" }} />
-              {news.readTime ?? "—"} read
+              {news.readTime ?? "—"}
             </Box>
           </Box>
+
           <Box
             sx={{
-              width: 60,
-              height: 3,
-              bgcolor: "primary.main",
-              mt: 2,
-              borderRadius: 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              color: "white",
             }}
-          />
+          >
+            <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
+            {editor?.id ? (
+              <Link
+                href={`/authors/${editor.id}`}
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                By: {editor.name}
+              </Link>
+            ) : null}
+          </Box>
         </Box>
       </Box>
 

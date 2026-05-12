@@ -14,7 +14,7 @@ import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { contentToMetadata, getTitle, getWordCountFromHtml } from "@/lib/seo";
 import { tiptapJsonToHtml } from "@/lib/tiptap-server";
-
+import EditIcon from "@mui/icons-material/Edit";
 type Editor = { id: string; name: string; avatarUrl?: string | null };
 type RelatedItem = {
   id: string;
@@ -71,7 +71,8 @@ function imgSrc(url: string | null | undefined) {
 }
 
 async function getArticle(slug: string): Promise<ArticleResponse | null> {
-  const base = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
   let res = await fetch(`${base}/api/v1/public/blogs/${slug}`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
@@ -86,7 +87,8 @@ async function getArticle(slug: string): Promise<ArticleResponse | null> {
 }
 
 async function getLatestBlogs(): Promise<RelatedItem[]> {
-  const base = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
   const res = await fetch(`${base}/api/v1/public/blogs?page=1&limit=5`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
@@ -97,7 +99,8 @@ async function getLatestBlogs(): Promise<RelatedItem[]> {
 }
 
 async function getLatestNews(): Promise<RelatedItem[]> {
-  const base = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
+  const base =
+    process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
   const res = await fetch(`${base}/api/v1/public/news?page=1&limit=5`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
@@ -281,7 +284,7 @@ export default async function BlogArticlePage({
           }}
         >
           <Typography
-            component="h1"
+            component="title"
             variant="h3"
             sx={{
               fontSize: { xs: "28px", md: "38px" },
@@ -305,12 +308,35 @@ export default async function BlogArticlePage({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <CalendarToday sx={{ fontSize: 18, color: "primary.main" }} />
-              {formatPublishedDate(article.publishDate)}
+              Published: {formatPublishedDate(article.publishDate)} UTC
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Schedule sx={{ fontSize: 18, color: "primary.main" }} />
               {article.readTime ?? "—"} read
             </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 0.5,
+              color: "white",
+            }}
+          >
+            <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
+            {editor?.id ? (
+              <Link
+                href={`/authors/${editor.id}`}
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "white",
+                  textDecoration: "none",
+                }}
+              >
+                By: {editor.name}
+              </Link>
+            ) : null}
           </Box>
           <Box
             sx={{

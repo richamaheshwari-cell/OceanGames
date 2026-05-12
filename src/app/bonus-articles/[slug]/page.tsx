@@ -266,7 +266,7 @@ export default async function BonusArticlePage({
           }}
         >
           <Typography
-            component="h1"
+            component="title"
             variant="h3"
             sx={{
               fontSize: { xs: "28px", md: "38px" },
@@ -290,7 +290,7 @@ export default async function BonusArticlePage({
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <CalendarToday sx={{ fontSize: 18, color: "primary.main" }} />
-              {formatPublishedDate(article.publishDate)}
+              Published: {formatPublishedDate(article.publishDate)} UTC
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <Schedule sx={{ fontSize: 18, color: "primary.main" }} />
@@ -306,6 +306,40 @@ export default async function BonusArticlePage({
               borderRadius: 1,
             }}
           />
+        </Box>
+        <Box>
+          <Typography
+            component="span"
+            sx={{ fontSize: "0.875rem", color: "text.secondary" }}
+          >
+            Author{" "}
+          </Typography>
+          {editor?.id ? (
+            <Link
+              href={`/authors/${editor.id}`}
+              style={{
+                fontSize: "0.875rem",
+                fontWeight: 600,
+                color: "text.primary",
+                textDecoration: "none",
+              }}
+            >
+              {editor.name}
+            </Link>
+          ) : (
+            <Typography
+              component="span"
+              sx={{ fontSize: "0.875rem", fontWeight: 600 }}
+            >
+              {editor?.name ?? "Staff"}
+            </Typography>
+          )}
+          <Typography
+            component="div"
+            sx={{ fontSize: "0.8rem", color: "text.secondary" }}
+          >
+            Published {formatPublishedDate(article.publishDate)}
+          </Typography>
         </Box>
       </Box>
 
@@ -414,7 +448,7 @@ export default async function BonusArticlePage({
                       mt: 0.25,
                     }}
                   >
-                    Published {formatPublishedDate(article.publishDate)}
+                    Published: {formatPublishedDate(article.publishDate)} UTC
                   </Typography>
                 </Box>
               </Box>
