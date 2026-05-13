@@ -391,7 +391,7 @@ export default async function CasinoDetailPage({
                       >
                         <Typography
                           variant="h4"
-                          component="title"
+                          component="h3"
                           sx={{
                             fontWeight: 800,
                             fontSize: {

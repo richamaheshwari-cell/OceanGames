@@ -14,9 +14,24 @@ import { JsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
 import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { TiptapHtmlServer } from "@/components/TiptapHtmlServer";
 import { contentToMetadata, type ContentRecord } from "@/lib/seo";
-import { CasinoGamesSection, type CasinoPageGame } from "@/app/casinos/[slug]/CasinoGamesSection";
-import { CASINO_RED, CASINO_RED_HOVER, PAGE_BG, TEXT_PRIMARY, CARD_RADIUS, CARD_SHADOW } from "@/app/casinos/[slug]/casino-detail-tokens";
-import { parseGameDetailResponse, parseGameListResponse, type GameCardItem, type GameDetailRecord } from "./gameDetailFetch";
+import {
+  CasinoGamesSection,
+  type CasinoPageGame,
+} from "@/app/casinos/[slug]/CasinoGamesSection";
+import {
+  CASINO_RED,
+  CASINO_RED_HOVER,
+  PAGE_BG,
+  TEXT_PRIMARY,
+  CARD_RADIUS,
+  CARD_SHADOW,
+} from "@/app/casinos/[slug]/casino-detail-tokens";
+import {
+  parseGameDetailResponse,
+  parseGameListResponse,
+  type GameCardItem,
+  type GameDetailRecord,
+} from "./gameDetailFetch";
 
 function imgSrc(url: string | null | undefined) {
   return normalizeImageUrl(url);
@@ -51,7 +66,10 @@ async function getCasinoNameBySlug(slug: string): Promise<string | null> {
   });
   if (!res.ok) return null;
   const json = await res.json();
-  const root = (json?.data ?? json) as { casinoName?: string; name?: string } | null;
+  const root = (json?.data ?? json) as {
+    casinoName?: string;
+    name?: string;
+  } | null;
   return (root?.casinoName ?? root?.name ?? null) as string | null;
 }
 
@@ -61,11 +79,15 @@ async function resolveCasinoSlugByName(name: string): Promise<string | null> {
   });
   if (!res.ok) return null;
   const json = await res.json();
-  const root = (json?.data ?? json) as { items?: unknown; casinos?: unknown; results?: unknown } | unknown;
+  const root = (json?.data ?? json) as
+    | { items?: unknown; casinos?: unknown; results?: unknown }
+    | unknown;
   if (!root || typeof root !== "object") return null;
-  const list = (root as { items?: unknown; casinos?: unknown; results?: unknown }).items
-    ?? (root as { items?: unknown; casinos?: unknown; results?: unknown }).casinos
-    ?? (root as { items?: unknown; casinos?: unknown; results?: unknown }).results;
+  const list =
+    (root as { items?: unknown; casinos?: unknown; results?: unknown }).items ??
+    (root as { items?: unknown; casinos?: unknown; results?: unknown })
+      .casinos ??
+    (root as { items?: unknown; casinos?: unknown; results?: unknown }).results;
   if (!Array.isArray(list)) return null;
   const target = name.trim().toLowerCase();
   const match = list.find((x) => {
@@ -77,7 +99,9 @@ async function resolveCasinoSlugByName(name: string): Promise<string | null> {
   return match?.slug?.trim() || null;
 }
 
-async function getRelatedGames(game: GameDetailRecord): Promise<{ casinoName: string | null; items: CasinoPageGame[] }> {
+async function getRelatedGames(
+  game: GameDetailRecord,
+): Promise<{ casinoName: string | null; items: CasinoPageGame[] }> {
   let casinoSlug = game.casinoRef.slug;
   let casinoName = game.casinoRef.name;
 
@@ -93,11 +117,13 @@ async function getRelatedGames(game: GameDetailRecord): Promise<{ casinoName: st
         excludeSlug: game.slug,
         excludeId: game.id,
       }),
-      { next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS } }
+      { next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS } },
     );
     if (res.ok) {
       const json = await res.json();
-      const list = parseGameListResponse(json).filter((x) => x.slug !== game.slug && x.id !== game.id);
+      const list = parseGameListResponse(json).filter(
+        (x) => x.slug !== game.slug && x.id !== game.id,
+      );
       if (!casinoName) casinoName = await getCasinoNameBySlug(casinoSlug);
       return { casinoName, items: list.map(mapCardToCasinoGame) };
     }
@@ -109,11 +135,17 @@ async function getRelatedGames(game: GameDetailRecord): Promise<{ casinoName: st
   });
   if (!fallbackRes.ok) return { casinoName, items: [] };
   const fallbackJson = await fallbackRes.json();
-  const fallbackItems = parseGameListResponse(fallbackJson).filter((x) => x.slug !== game.slug && x.id !== game.id);
+  const fallbackItems = parseGameListResponse(fallbackJson).filter(
+    (x) => x.slug !== game.slug && x.id !== game.id,
+  );
   return { casinoName, items: fallbackItems.map(mapCardToCasinoGame) };
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   const game = await getGame(slug);
   if (!game) return { title: "Game | TheOceanGame" };
@@ -126,11 +158,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       shortDesc: game.shortDesc,
       featureImg: game.featureImg,
     },
-    { routeBase: "games", isArticle: false }
+    { routeBase: "games", isArticle: false },
   );
 }
 
-export default async function GameDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function GameDetailPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const game = await getGame(slug);
   if (!game) notFound();
@@ -173,8 +209,26 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
             pt: { xs: "56px", md: "64px" },
           }}
         >
-          <Image src={hero} alt="" fill priority sizes="100vw" style={{ objectFit: "cover", objectPosition: "center", transform: "scale(1.04)" }} />
-          <Box sx={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.8) 100%)" }} />
+          <Image
+            src={hero}
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            style={{
+              objectFit: "cover",
+              objectPosition: "center",
+              transform: "scale(1.04)",
+            }}
+          />
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.8) 100%)",
+            }}
+          />
 
           <Box
             sx={{
@@ -190,8 +244,20 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
               pb: { xs: 6, sm: 7, md: 8 },
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 2, flexWrap: "wrap" , padding:1}}>
-              <Link href="/games" style={{ textDecoration: "none", display: "inline-flex" }}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 2,
+                flexWrap: "wrap",
+                padding: 1,
+              }}
+            >
+              <Link
+                href="/games"
+                style={{ textDecoration: "none", display: "inline-flex" }}
+              >
                 <Button
                   variant="contained"
                   startIcon={<ArrowBack sx={{ fontSize: 18 }} />}
@@ -216,7 +282,15 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
           </Box>
         </Box>
 
-        <Box sx={{ position: "relative", zIndex: 2, px: { xs: 2, md: 3 }, pb: { xs: 5, md: 7 }, pt: 0 }}>
+        <Box
+          sx={{
+            position: "relative",
+            zIndex: 2,
+            px: { xs: 2, md: 3 },
+            pb: { xs: 5, md: 7 },
+            pt: 0,
+          }}
+        >
           <Box sx={{ maxWidth: 1200, mx: "auto" }}>
             <Box
               sx={{
@@ -229,25 +303,77 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
               }}
             >
               <Box sx={{ p: { xs: 2.5, md: 4 } }}>
-                <Stack direction={{ xs: "column", md: "row" }} spacing={3} justifyContent="space-between">
-                  <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+                <Stack
+                  direction={{ xs: "column", md: "row" }}
+                  spacing={3}
+                  justifyContent="space-between"
+                >
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{ flex: 1, minWidth: 0 }}
+                  >
                     {cover && (
-                      <Box sx={{ width: { xs: 92, md: 112 }, height: { xs: 92, md: 112 }, borderRadius: "16px", overflow: "hidden", position: "relative", flexShrink: 0 }}>
-                        <Image src={cover} alt={game.title} fill sizes="112px" style={{ objectFit: "cover" }} />
+                      <Box
+                        sx={{
+                          width: { xs: 92, md: 112 },
+                          height: { xs: 92, md: 112 },
+                          borderRadius: "16px",
+                          overflow: "hidden",
+                          position: "relative",
+                          flexShrink: 0,
+                        }}
+                      >
+                        <Image
+                          src={cover}
+                          alt={game.title}
+                          fill
+                          sizes="112px"
+                          style={{ objectFit: "cover" }}
+                        />
                       </Box>
                     )}
                     <Box sx={{ minWidth: 0 }}>
-                      <Typography component="title" sx={{ fontWeight: 800, fontSize: { xs: "1.45rem", md: "2rem" }, color: TEXT_PRIMARY, letterSpacing: "-0.02em", lineHeight: 1.2, mb: 1 }}>
+                      <Typography
+                        component="h3"
+                        sx={{
+                          fontWeight: 800,
+                          fontSize: { xs: "1.45rem", md: "2rem" },
+                          color: TEXT_PRIMARY,
+                          letterSpacing: "-0.02em",
+                          lineHeight: 1.2,
+                          mb: 1,
+                        }}
+                      >
                         {game.title}
                       </Typography>
-                      <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 1.25 }}>
-                        {game.tag && <Chip size="small" label={game.tag} sx={{ bgcolor: "rgba(229,57,53,0.12)", color: CASINO_RED, fontWeight: 700 }} />}
+                      <Stack
+                        direction="row"
+                        flexWrap="wrap"
+                        gap={1}
+                        sx={{ mb: 1.25 }}
+                      >
+                        {game.tag && (
+                          <Chip
+                            size="small"
+                            label={game.tag}
+                            sx={{
+                              bgcolor: "rgba(229,57,53,0.12)",
+                              color: CASINO_RED,
+                              fontWeight: 700,
+                            }}
+                          />
+                        )}
                         {provider && (
                           <Chip
                             size="small"
                             icon={<Apartment sx={{ fontSize: 16 }} />}
                             label={provider}
-                            sx={{ bgcolor: "rgba(0,0,0,0.05)", color: TEXT_PRIMARY, fontWeight: 600 }}
+                            sx={{
+                              bgcolor: "rgba(0,0,0,0.05)",
+                              color: TEXT_PRIMARY,
+                              fontWeight: 600,
+                            }}
                           />
                         )}
                         {casinoName && (
@@ -255,7 +381,11 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
                             size="small"
                             icon={<Casino sx={{ fontSize: 16 }} />}
                             label={casinoName}
-                            sx={{ bgcolor: "#e8f5e9", color: "#1b5e20", fontWeight: 700 }}
+                            sx={{
+                              bgcolor: "#e8f5e9",
+                              color: "#1b5e20",
+                              fontWeight: 700,
+                            }}
                           />
                         )}
                       </Stack>
@@ -294,7 +424,14 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
                 {game.shortDesc && (
                   <>
                     <Divider sx={{ my: { xs: 3, md: 4 } }} />
-                    <Typography sx={{ color: TEXT_PRIMARY, fontSize: { xs: "1.03rem", md: "1.1rem" }, lineHeight: 1.75, fontWeight: 500 }}>
+                    <Typography
+                      sx={{
+                        color: TEXT_PRIMARY,
+                        fontSize: { xs: "1.03rem", md: "1.1rem" },
+                        lineHeight: 1.75,
+                        fontWeight: 500,
+                      }}
+                    >
                       {game.shortDesc}
                     </Typography>
                   </>
@@ -310,8 +447,12 @@ export default async function GameDetailPage({ params }: { params: Promise<{ slu
                           fontSize: "1rem",
                           lineHeight: 1.8,
                         },
-                        "& .tiptap-viewer .ProseMirror p:first-of-type": { mt: 0 },
-                        "& .tiptap-viewer .ProseMirror p:last-of-type": { mb: 0 },
+                        "& .tiptap-viewer .ProseMirror p:first-of-type": {
+                          mt: 0,
+                        },
+                        "& .tiptap-viewer .ProseMirror p:last-of-type": {
+                          mb: 0,
+                        },
                       }}
                     >
                       <TiptapHtmlServer content={game.content} />
