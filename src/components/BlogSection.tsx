@@ -114,6 +114,9 @@ export async function BlogSection() {
             }}
           >
             {items.map((article) => {
+              if (!article || !article.id || !article.slug || !article.title)
+                return null;
+              console.log("Article:", article);
               const resolvedImg = normalizeImageUrl(
                 article.featureImg ?? article.image ?? null,
               );
@@ -147,13 +150,14 @@ export async function BlogSection() {
                       }}
                     >
                       {resolvedImg ? (
-                        <Image
-                          src={resolvedImg}
+                        <img
+                          src={resolvedImg || "/placeholder.png"}
                           alt={article.title}
-                          fill
-                          unoptimized
-                          style={{ objectFit: "cover" }}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 430px"
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
                         />
                       ) : (
                         <Box

@@ -178,13 +178,20 @@ function SidebarItem({
               flexShrink: 0,
             }}
           >
-            <Image
+            {/* <Image
               src={src}
               alt={item.title}
               width={56}
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
+              unoptimized
+            /> */}
+            <img
+              src={src}
+              alt={item.title}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              loading="lazy"
             />
           </Box>
         )}
@@ -240,6 +247,7 @@ export default async function BlogArticlePage({
   return (
     <>
       <ReadingProgressBar />
+      {/* JsonLd and BreadcrumbJsonLd only render JSON-LD scripts, not canonical links. No canonical link is rendered here. */}
       <JsonLd
         record={article}
         routeBase="blog"
@@ -262,9 +270,27 @@ export default async function BlogArticlePage({
             src={imgSrc(article.featureImg)!}
             alt={h1Title}
             fill
-            style={{ objectFit: "cover", zIndex: 0 }}
-            sizes="(max-width: 1920px) 100vw, 1920px"
+            priority
+            unoptimized
+            sizes="100vw"
+            style={{
+              objectFit: "cover",
+              zIndex: 0,
+            }}
           />
+          // <img
+          //   src={imgSrc(article.featureImg)!}
+          //   alt={h1Title}
+          //   loading="lazy"
+          //   style={{
+          //     width: "100%",
+          //     height: "100%",
+          //     objectFit: "cover",
+          //     position: "absolute",
+          //     inset: 0,
+          //     zIndex: 0,
+          //   }}
+          // />
         )}
         <Box
           sx={{
@@ -284,7 +310,7 @@ export default async function BlogArticlePage({
           }}
         >
           <Typography
-            component="title"
+            component="h1"
             variant="h3"
             sx={{
               fontSize: { xs: "28px", md: "38px" },
@@ -326,7 +352,7 @@ export default async function BlogArticlePage({
             <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
             {editor?.id ? (
               <Link
-                href={`/authors/${editor.id}`}
+                href={`/authors/${encodeURIComponent(editor.name)}`}
                 style={{
                   fontSize: "0.875rem",
                   fontWeight: 500,
@@ -393,12 +419,13 @@ export default async function BlogArticlePage({
                       flexShrink: 0,
                     }}
                   >
-                    <Image
+                    <img
                       src={imgSrc(editor.avatarUrl)!}
                       alt={editor.name}
                       width={40}
                       height={40}
                       style={{ objectFit: "cover" }}
+                      loading="lazy"
                     />
                   </Box>
                 ) : (
@@ -429,7 +456,7 @@ export default async function BlogArticlePage({
                   </Typography>
                   {editor?.id ? (
                     <Link
-                      href={`/authors/${editor.id}`}
+                      href={`/authors/${encodeURIComponent(editor.name)}`}
                       style={{
                         fontSize: "0.875rem",
                         fontWeight: 600,

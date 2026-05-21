@@ -154,13 +154,20 @@ function SidebarItem({
               flexShrink: 0,
             }}
           >
-            <Image
+            {/* <Image
               src={src}
               alt={item.title}
               width={56}
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
+              unoptimized
+            /> */}
+            <img
+              src={src}
+              alt={item.title}
+              loading="lazy"
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </Box>
         )}
@@ -232,13 +239,18 @@ export default async function NewsArticlePage({
         }}
       >
         {news.featureImg && (
-          <Image
+          <img
             src={imgSrc(news.featureImg)!}
             alt={h1Title}
-            fill
-            priority
-            style={{ objectFit: "cover", zIndex: 0 }}
-            sizes="(max-width: 1920px) 100vw, 1920px"
+            loading="lazy"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              zIndex: 0,
+            }}
           />
         )}
         <Box
@@ -302,7 +314,7 @@ export default async function NewsArticlePage({
             <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
             {editor?.id ? (
               <Link
-                href={`/authors/${editor.id}`}
+                href={`/authors/${encodeURIComponent(editor.name)}`}
                 style={{
                   fontSize: "0.875rem",
                   fontWeight: 500,
@@ -365,6 +377,7 @@ export default async function NewsArticlePage({
                       alt={editor.name}
                       width={40}
                       height={40}
+                      unoptimized
                       style={{ objectFit: "cover" }}
                     />
                   </Box>
@@ -396,7 +409,7 @@ export default async function NewsArticlePage({
                   </Typography>
                   {editor?.id ? (
                     <Link
-                      href={`/authors/${editor.id}`}
+                      href={`/authors/${encodeURIComponent(editor.name)}`}
                       style={{
                         fontSize: "0.875rem",
                         fontWeight: 600,

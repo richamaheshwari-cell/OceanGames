@@ -35,7 +35,9 @@ export const CASINO_CARD_WIDTH = 300;
 
 function imgUrl(path: string | null | undefined) {
   if (!path) return null;
-  const candidate = path.startsWith("http") ? path : `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+  const candidate = path.startsWith("http")
+    ? path
+    : `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
   return normalizeImageUrl(candidate);
 }
 
@@ -53,7 +55,13 @@ function StarRow({ rating }: { rating: number }) {
         const sx = { fontSize: "1.05rem", color: STAR_COLOR };
         if (kind === "full") return <Star key={i} sx={sx} aria-hidden />;
         if (kind === "half") return <StarHalf key={i} sx={sx} aria-hidden />;
-        return <StarBorder key={i} sx={{ ...sx, color: "rgba(255,255,255,0.45)" }} aria-hidden />;
+        return (
+          <StarBorder
+            key={i}
+            sx={{ ...sx, color: "rgba(255,255,255,0.45)" }}
+            aria-hidden
+          />
+        );
       })}
     </Stack>
   );
@@ -65,10 +73,15 @@ type CasinoListingCardServerProps = {
   variant?: "default" | "home";
 };
 
-export function CasinoListingCardServer({ casino, variant = "default" }: CasinoListingCardServerProps) {
+export function CasinoListingCardServer({
+  casino,
+  variant = "default",
+}: CasinoListingCardServerProps) {
   const rating = Math.min(5, Math.max(0, casino.rating ?? 0));
   const gamesLabel =
-    casino.totalGames != null && casino.totalGames > 0 ? `${casino.totalGames.toLocaleString()}+` : "—";
+    casino.totalGames != null && casino.totalGames > 0
+      ? `${casino.totalGames.toLocaleString()}+`
+      : "—";
 
   const visitHref = casino.clientLink?.trim() || undefined;
   const canVisit = Boolean(casino.clientLink?.trim());
@@ -80,7 +93,12 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
     <Box
       sx={{
         ...(isHome
-          ? { width: "100%", maxWidth: CASINO_CARD_WIDTH, minWidth: 0, mx: "auto" }
+          ? {
+              width: "100%",
+              maxWidth: CASINO_CARD_WIDTH,
+              minWidth: 0,
+              mx: "auto",
+            }
           : { width: CASINO_CARD_WIDTH, flexShrink: 0 }),
         height: "100%",
         display: "flex",
@@ -114,11 +132,16 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
         {featureSrc && (
           <Image
             src={featureSrc}
-            alt=""
+            alt={casino.casinoName}
             fill
-            sizes={`${CASINO_CARD_WIDTH}px`}
             unoptimized
-            style={{ objectFit: "cover", opacity: 0.70 }}
+            loading="lazy"
+            quality={70}
+            sizes="(max-width: 768px) 100vw, 300px"
+            style={{
+              objectFit: "cover",
+              opacity: 0.7,
+            }}
           />
         )}
 
@@ -160,9 +183,18 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
             {casino.casinoName}
           </Typography>
 
-          <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" justifyContent="flex-start">
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            flexWrap="wrap"
+            justifyContent="flex-start"
+          >
             <StarRow rating={rating} />
-            <Typography component="span" sx={{ color: "white", fontWeight: 700, fontSize: "0.9rem" }}>
+            <Typography
+              component="span"
+              sx={{ color: "white", fontWeight: 700, fontSize: "0.9rem" }}
+            >
               {rating > 0 ? rating.toFixed(1) : "—"}
             </Typography>
           </Stack>
@@ -170,7 +202,15 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
       </Box>
 
       {/* Stats + tags + actions (actions pinned to bottom) */}
-      <Box sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <Box
+        sx={{
+          p: 2,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+        }}
+      >
         <Stack direction="row" spacing={1.25} sx={{ mb: 1.5 }}>
           <Box
             sx={{
@@ -182,10 +222,24 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
               p: 1.25,
             }}
           >
-            <Typography variant="caption" sx={{ display: "block", color: "text.secondary", fontWeight: 500 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                fontWeight: 500,
+              }}
+            >
               Welcome Bonus
             </Typography>
-            <Typography sx={{ color: ACCENT_RED, fontWeight: 800, fontSize: "1.05rem", lineHeight: 1.2 }}>
+            <Typography
+              sx={{
+                color: ACCENT_RED,
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                lineHeight: 1.2,
+              }}
+            >
               {casino.bonusAmt ?? "—"}
             </Typography>
           </Box>
@@ -200,21 +254,49 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
               p: 1.25,
             }}
           >
-            <Typography variant="caption" sx={{ display: "block", color: "text.secondary", fontWeight: 500 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                fontWeight: 500,
+              }}
+            >
               Games
             </Typography>
-            <Typography sx={{ color: ACCENT_RED, fontWeight: 800, fontSize: "1.05rem", lineHeight: 1.2 }}>
+            <Typography
+              sx={{
+                color: ACCENT_RED,
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                lineHeight: 1.2,
+              }}
+            >
               {gamesLabel}
             </Typography>
           </Box>
         </Stack>
 
-        <Stack direction="row" flexWrap="wrap" gap={0.75} sx={{ mb: 2, flex: 1, alignContent: "flex-start" }}>
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          gap={0.75}
+          sx={{ mb: 2, flex: 1, alignContent: "flex-start" }}
+        >
           {(casino.tags ?? []).slice(0, 3).map((t) => (
             <Chip
               key={t}
               size="small"
-              icon={<Check sx={{ fontSize: 16, color: `${ACCENT_RED} !important`, flexShrink: 0 }} aria-hidden />}
+              icon={
+                <Check
+                  sx={{
+                    fontSize: 16,
+                    color: `${ACCENT_RED} !important`,
+                    flexShrink: 0,
+                  }}
+                  aria-hidden
+                />
+              }
               label={t}
               sx={{
                 bgcolor: TAG_BG,
@@ -228,7 +310,12 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
           ))}
         </Stack>
 
-        <Stack direction="row" spacing={1} alignItems="stretch" sx={{ mt: "auto", pt: 0.5 }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="stretch"
+          sx={{ mt: "auto", pt: 0.5 }}
+        >
           {canVisit ? (
             <Button
               component="a"
@@ -277,4 +364,3 @@ export function CasinoListingCardServer({ casino, variant = "default" }: CasinoL
     </Box>
   );
 }
-

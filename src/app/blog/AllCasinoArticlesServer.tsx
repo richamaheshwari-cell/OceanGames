@@ -6,6 +6,8 @@ import { API_PUBLIC, SEO_CACHE_REVALIDATE_SECONDS } from "@/lib/api";
 import { SITE_URL } from "@/lib/seo";
 import { normalizeImageUrl } from "@/lib/image-url";
 import { QueryPagination } from "@/components/QueryPagination";
+import { generateArticleSchema } from "@/lib/schema/articleSchema";
+import { JsonLdScript } from "@/components/JsonLd";
 
 type Item = {
   id: string;
@@ -22,6 +24,18 @@ type Item = {
   shortDesc?: string | null;
   publishDate?: string | null;
   readTime?: string | null;
+  author?: {
+    name: string;
+    slug?: string;
+    description?: string;
+    image?: string;
+  };
+  reviewedBy?: {
+    name: string;
+    slug?: string;
+    description?: string;
+    image?: string;
+  };
 };
 
 function formatPublishedDate(s: string | null | undefined) {
@@ -31,7 +45,7 @@ function formatPublishedDate(s: string | null | undefined) {
     const d = new Date(s);
 
     return d.toLocaleString("en-US", {
-      timeZone: "America/New_York", // ✅ important
+      timeZone: "America/New_York", //important
       month: "long", // April
       day: "numeric", // 19
       year: "numeric", // 2026
@@ -64,14 +78,18 @@ export async function AllCasinoArticlesServer({
         cache: "no-store",
       },
     );
+    console.log("res", res);
     const json = await res.json().catch(() => null);
     const root = (json?.data ?? json) as {
       items?: Item[];
       totalPages?: number;
     } | null;
+    console.log("root", root);
     items = Array.isArray(root?.items) ? root!.items : [];
     totalPages = Number(root?.totalPages ?? 1) || 1;
-  } catch {
+    console.log("items", items, totalPages);
+  } catch (err) {
+    console.log("err", err);
     items = [];
     totalPages = 1;
   }
@@ -115,126 +133,144 @@ export async function AllCasinoArticlesServer({
             items.map((article) => {
               const img = normalizeImageUrl(article.featureImg) ?? null;
               const href = `${SITE_URL}${article.href}`;
-
+              console.log("blog schema", article);
               return (
-                <Box
-                  key={article.id}
-                  component="a"
-                  href={href}
-                  sx={{
-                    bgcolor: "background.paper",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    border: "1px solid",
-                    borderColor: "divider",
-                    textDecoration: "none",
-                    color: "inherit",
-                    "&:hover": { borderColor: "primary.main", boxShadow: 2 },
-                    display: "block",
-                  }}
-                >
-                  <Box sx={{ position: "relative", height: 160 }}>
-                    {img ? (
-                      <Box
-                        component="img"
-                        src={img}
-                        alt={article.title}
-                        loading="lazy"
-                        sx={{
-                          position: "absolute",
-                          inset: 0,
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                        }}
-                      />
-                    ) : (
-                      <Box
-                        sx={{
-                          width: "100%",
-                          height: "100%",
-                          bgcolor: "grey.300",
-                        }}
-                      />
-                    )}
-                  </Box>
-
-                  <Box sx={{ p: 2 }}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 1.5,
-                        mb: 1,
-                        color: "text.secondary",
-                        fontSize: "0.75rem",
-                      }}
-                    >
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                      >
-                        <CalendarToday
-                          sx={{ fontSize: 14, color: "primary.main" }}
+                <>
+                  <JsonLdScript
+                    data={generateArticleSchema({
+                      url: href,
+                      title: article.title,
+                      description: article.shortDesc ?? "",
+                      image: img || undefined,
+                      datePublished: article.publishDate ?? "",
+                      author: article.author,
+                      reviewedBy: article.reviewedBy,
+                    })}
+                  />
+                  <Box
+                    key={article.id}
+                    component="a"
+                    href={href}
+                    sx={{
+                      bgcolor: "background.paper",
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      textDecoration: "none",
+                      color: "inherit",
+                      "&:hover": { borderColor: "primary.main", boxShadow: 2 },
+                      display: "block",
+                    }}
+                  >
+                    <Box sx={{ position: "relative", height: 160 }}>
+                      {img ? (
+                        <Box
+                          component="img"
+                          src={img}
+                          alt={article.title}
+                          loading="lazy"
+                          sx={{
+                            position: "absolute",
+                            inset: 0,
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
                         />
-                        Published: {formatPublishedDate(article.publishDate)} UTC
-                      </Box>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                      >
-                        <Schedule
-                          sx={{ fontSize: 14, color: "primary.main" }}
+                      ) : (
+                        <Box
+                          sx={{
+                            width: "100%",
+                            height: "100%",
+                            bgcolor: "grey.300",
+                          }}
                         />
-                        {article.readTime ?? "—"} read
-                      </Box>
-
-                      
+                      )}
                     </Box>
 
-                    
+                    <Box sx={{ p: 2 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1.5,
+                          mb: 1,
+                          color: "text.secondary",
+                          fontSize: "0.75rem",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
+                          <CalendarToday
+                            sx={{ fontSize: 14, color: "primary.main" }}
+                          />
+                          Published: {formatPublishedDate(article.publishDate)}{" "}
+                          UTC
+                        </Box>
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 0.5,
+                          }}
+                        >
+                          <Schedule
+                            sx={{ fontSize: 14, color: "primary.main" }}
+                          />
+                          {article.readTime ?? "—"} read
+                        </Box>
+                      </Box>
 
-                    <Typography
-                      variant="subtitle1"
-                      sx={{
-                        fontWeight: 700,
-                        mb: 0.5,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {article.title}
-                    </Typography>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 700,
+                          mb: 0.5,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {article.title}
+                      </Typography>
 
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      sx={{
-                        mb: 1,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {article.shortDesc ?? ""}
-                    </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          mb: 1,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {article.shortDesc ?? ""}
+                      </Typography>
 
-                    <Typography
-                      component="span"
-                      sx={{
-                        color: "primary.main",
-                        fontWeight: 600,
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      Read{" "}
-                      <ArrowForward
-                        sx={{ fontSize: 14, verticalAlign: "middle" }}
-                      />
-                    </Typography>
+                      <Typography
+                        component="span"
+                        sx={{
+                          color: "primary.main",
+                          fontWeight: 600,
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        Read{" "}
+                        <ArrowForward
+                          sx={{ fontSize: 14, verticalAlign: "middle" }}
+                        />
+                      </Typography>
+                    </Box>
                   </Box>
-                </Box>
+                </>
               );
             })
           ) : (

@@ -22,12 +22,13 @@ export function BonusHighlightsHero() {
       }}
     >
       <Image
-        src="/hero.webp"
+        src="/image.webp"
         alt=""
         fill
-        priority
-        sizes="100vw"
+        // priority
+        // sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
+        unoptimized
       />
       <Box
         sx={{

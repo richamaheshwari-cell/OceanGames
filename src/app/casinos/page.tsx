@@ -37,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CasinosPage({ searchParams }: PageProps) {
-  const params = searchParams ?? {};
+  const params = await searchParams ?? {};
   const page = readPageParam(params.page, 1);
   const snapshot = await fetchItemListSnapshot(ENDPOINTS.casinos, "casinos", 8);
 

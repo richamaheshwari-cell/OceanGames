@@ -23,11 +23,14 @@ export function CasinoInsightsHero() {
     >
       <Image
         src="/hero.webp"
-        alt=""
+        alt="Casino"
         fill
         priority
         sizes="100vw"
-        style={{ objectFit: "cover", objectPosition: "center" }}
+        style={{
+          objectFit: "cover",
+          objectPosition: "center",
+        }}
       />
       <Box
         sx={{

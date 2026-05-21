@@ -23,9 +23,12 @@ export function BlogHero() {
         src="/hero.webp"
         alt="Casino Blogs & Insights"
         fill
-        sizes="(max-width: 1920px) 100vw, 1920px"
+        priority
+        sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
+        unoptimized
       />
+
       <Box
         sx={{
           position: "absolute",

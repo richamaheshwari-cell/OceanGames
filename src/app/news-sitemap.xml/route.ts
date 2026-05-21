@@ -18,15 +18,19 @@ ${newsEntries
     .map(
       (e) => {
         const published = e.lastmod ? new Date(e.lastmod).toISOString() : new Date().toISOString();
-        return `<url><loc>${SITE_URL}${e.path}</loc>
+        return `<url>
+  <loc>${SITE_URL}${e.path}</loc>
   <news:news>
     <news:publication>
       <news:name>Ocean Games News</news:name>
       <news:language>en</news:language>
     </news:publication>
     <news:publication_date>${published}</news:publication_date>
-    <news:lastmod>${published}</news:lastmod>
+    <news:title>${escapeXml(e.title || "Untitled News")}</news:title>
   </news:news>
+  <lastmod>${published}</lastmod>
+  <priority>0.8</priority>
+  <changefreq>daily</changefreq>
 </url>`;
       }
     )
@@ -36,4 +40,11 @@ ${newsEntries
   return new NextResponse(xml, {
     headers: { "Content-Type": "application/xml" },
   });
+}
+
+// Helper to escape XML special chars
+function escapeXml(unsafe: string) {
+  return unsafe.replace(/[<>&'"]/g, c => ({
+    '<': '&lt;', '>': '&gt;', '&': '&amp;', "'": '&apos;', '"': '&quot;'
+  }[c] || c));
 }

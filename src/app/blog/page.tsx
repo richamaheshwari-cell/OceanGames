@@ -80,6 +80,7 @@ export default async function BlogPage({ searchParams }: PageProps) {
   const snapshot = await fetchItemListSnapshot(ENDPOINTS.blogs, "blog", 8);
   return (
     <>
+      {/* SEO and JSON-LD handled by generateMetadata and JsonLdScript. Headline is rendered by BlogHero as <h1>. */}
       <JsonLdScript
         data={buildCollectionJsonLd({
           name: TITLE,

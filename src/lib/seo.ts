@@ -94,12 +94,13 @@ export function getAuthorName(record: ContentRecord): string | undefined {
 }
 
 /** Author profile URL when id available. */
+/** Author profile URL when name available. */
 export function getAuthorUrl(record: ContentRecord): string | undefined {
-  const id =
-    record.editor?.id ??
-    record.createdBy?.id ??
-    record.updatedBy?.id;
-  return id ? `${SITE_URL}/authors/${id}` : undefined;
+  const name =
+    record.editor?.name ??
+    record.createdBy?.name ??
+    record.updatedBy?.name;
+  return name ? `${SITE_URL}/authors/${encodeURIComponent(name)}` : undefined;
 }
 
 /** Canonical full URL. Always production domain. */
@@ -312,7 +313,7 @@ export function buildAuthorJsonLd(p: {
   image?: string | null;
   items?: Array<{ name: string; url: string }>;
 }): object {
-  const url = `${SITE_URL}/authors/${p.id}`;
+  const url = `${SITE_URL}/authors/${encodeURIComponent(p.name)}`;
   const img = p.image?.startsWith("http")
     ? p.image
     : p.image

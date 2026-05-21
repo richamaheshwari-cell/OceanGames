@@ -87,7 +87,6 @@ export async function GamesSection() {
                           fill
                           unoptimized
                           style={{ objectFit: "cover" }}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 320px"
                         />
                       ) : (
                         <Box sx={{ width: "100%", height: "100%", bgcolor: "grey.300" }} />

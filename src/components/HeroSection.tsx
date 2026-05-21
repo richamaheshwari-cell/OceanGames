@@ -31,8 +31,13 @@ export function HeroSection() {
         src="/hero.webp"
         alt="Casino Interior"
         fill
+        priority
         sizes="100vw"
-        style={{ objectFit: "cover", objectPosition: "center" }}
+        style={{
+          objectFit: "cover",
+          objectPosition: "center",
+        }}
+        unoptimized
       />
 
       <Box

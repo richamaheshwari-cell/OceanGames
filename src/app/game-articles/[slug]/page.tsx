@@ -172,6 +172,7 @@ function SidebarItem({
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
+              unoptimized
             />
           </Box>
         )}
@@ -246,8 +247,10 @@ export default async function GameArticlePage({
             src={imgSrc(article.featureImg)!}
             alt={h1Title}
             fill
+            priority
+            sizes="100vw"
             style={{ objectFit: "cover", zIndex: 0 }}
-            sizes="(max-width: 1920px) 100vw, 1920px"
+            unoptimized
           />
         )}
         <Box
@@ -394,6 +397,7 @@ export default async function GameArticlePage({
                       width={40}
                       height={40}
                       style={{ objectFit: "cover" }}
+                      unoptimized
                     />
                   </Box>
                 ) : (
@@ -629,7 +633,8 @@ export default async function GameArticlePage({
                           fill
                           loading="lazy"
                           style={{ objectFit: "cover" }}
-                          sizes="220px"
+                          // sizes="220px"
+                          unoptimized
                         />
                       ) : (
                         <Box

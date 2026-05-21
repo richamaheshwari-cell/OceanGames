@@ -31,21 +31,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-
   alternates: buildLocaleAlternates("/"),
-
   applicationName: SITE_NAME,
-  category: "Entertainment",
-  publisher: SITE_NAME,
-  referrer: "origin-when-cross-origin",
-
-  // Avoid iOS turning numbers into phone links
-  formatDetection: {
-    telephone: false,
-    address: false,
-    email: false,
-  },
-
   icons: {
     icon: [
       { url: "/favicon/favicon.ico", sizes: "any" },
@@ -55,59 +42,19 @@ export const metadata: Metadata = {
     apple: "/favicon/apple-touch-icon.png",
   },
   manifest: "/favicon/site.webmanifest",
-
   title: {
     default: TITLE,
     template: `%s | ${SITE_NAME}`,
   },
-
   description: DESCRIPTION,
-
-  // Keep keywords modest (Google mostly ignores), but it's fine to include
-  keywords: [
-    "online casino reviews",
-    "casino bonuses",
-    "casino guide",
-    "slot games",
-    "best online casinos",
-    "casino strategies",
-    "responsible iGaming",
-  ],
-
-  authors: [{ name: SITE_NAME }],
-  creator: SITE_NAME,
-
-  robots: {
-    index: true,
-    follow: true,
-    "max-snippet": -1,
-    "max-image-preview": "large",
-    "max-video-preview": -1,
-  },
-
-  // Optional but useful for search consoles (google-site-verification added in <head> below)
-  verification: {
-    // google: "GOOGLE_VERIFICATION_CODE",
-    // other: { "msvalidate.01": "BING_VERIFICATION_CODE" },
-  },
-
-  // Misc meta tags (safe)
-  other: {
-    "theme-color": "#0B1220",
-    "apple-mobile-web-app-status-bar-style": "black-translucent",
-    "content-language": SITE_LANGUAGE,
-    rating: "adult",
-    "age-restriction": "21+",
-    "responsible-gaming": "Informational content only. Gamble responsibly.",
-  },
-};
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // ✅ Optional JSON-LD (Organization). Safe and recommended.
+  // Optional JSON-LD (Organization). Safe and recommended.
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -135,7 +82,7 @@ export default function RootLayout({
     apiOrigin && apiOrigin !== new URL(siteOrigin).origin;
 
   return (
-    <html lang={SITE_LANGUAGE}>
+    <html lang={SITE_LANGUAGE || "en-US"}>
       <head>
         <link rel="preconnect" href={siteOrigin} />
         {needApiPreconnect && <link rel="preconnect" href={apiOrigin!} />}
@@ -144,6 +91,13 @@ export default function RootLayout({
         <meta
           name="google-site-verification"
           content="O2vzFgzjveqFbUrCyx6ZoxIr4POo-1zi5UR4oRfCFiE"
+        />
+        {/* Explicit responsible gaming and rating meta tags */}
+        <meta name="rating" content="adult" />
+        <meta name="age-restriction" content="21+" />
+        <meta
+          name="responsible-gaming"
+          content="Informational content only. Gamble responsibly."
         />
       </head>
       <body

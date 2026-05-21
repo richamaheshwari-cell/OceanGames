@@ -300,7 +300,7 @@ export default async function CasinoArticlePage({
           <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
           {editor?.id ? (
             <Link
-              href={`/authors/${editor.id}`}
+              href={`/authors/${encodeURIComponent(editor.name)}`}
               style={{
                 fontSize: "0.875rem",
                 fontWeight: 500,
@@ -385,7 +385,7 @@ export default async function CasinoArticlePage({
                   </Typography>
                   {editor?.id ? (
                     <Link
-                      href={`/authors/${editor.id}`}
+                      href={`/authors/${encodeURIComponent(editor.name)}`}
                       style={{
                         fontSize: "0.875rem",
                         fontWeight: 600,

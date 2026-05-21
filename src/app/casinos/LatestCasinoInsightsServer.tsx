@@ -27,7 +27,7 @@ function formatPublishedDate(s: string | null | undefined) {
     const d = new Date(s);
 
     return d.toLocaleString("en-US", {
-      timeZone: "America/New_York", // ✅ important
+      timeZone: "America/New_York", // important
       month: "long", // April
       day: "numeric", // 19
       year: "numeric", // 2026

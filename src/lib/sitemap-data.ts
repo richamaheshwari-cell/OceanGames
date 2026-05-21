@@ -11,8 +11,8 @@ const CACHE = { next: { revalidate: SITEMAP_REVALIDATE_SECONDS } } as RequestIni
 async function fetchAllSlugsWithLastmod(
   endpoint: string,
   key: string = "slug"
-): Promise<{ slug: string; lastmod?: string }[]> {
-  const results: { slug: string; lastmod?: string }[] = [];
+): Promise<{ slug: string; lastmod?: string; title?: string }[]> {
+  const results: { slug: string; lastmod?: string; title?: string }[] = [];
   let page = 1;
   let hasMore = true;
 
@@ -26,7 +26,12 @@ async function fetchAllSlugsWithLastmod(
       const s = item[key] ?? item.slug;
       if (s && typeof s === "string") {
         const lastmod = item.updatedAt ?? item.updated_at ?? item.publishDate ?? item.publish_date ?? undefined;
-        results.push({ slug: s, lastmod: typeof lastmod === "string" ? lastmod : undefined });
+        // Only include title for news and trendingNews endpoints
+        let title: string | undefined = undefined;
+        if (endpoint === "/news" || endpoint === "/trendingNews") {
+          title = item.title ?? undefined;
+        }
+        results.push({ slug: s, lastmod: typeof lastmod === "string" ? lastmod : undefined, title });
       }
     }
     const totalPages = data.totalPages ?? 1;
@@ -39,6 +44,7 @@ async function fetchAllSlugsWithLastmod(
 export interface SitemapEntry {
   path: string;
   lastmod?: string;
+  title?: string;
 }
 
 export async function getAllSitemapEntries(): Promise<SitemapEntry[]> {
@@ -77,16 +83,16 @@ export async function getAllSitemapEntries(): Promise<SitemapEntry[]> {
       entries.push({ path: `/blog/${slug}`, lastmod });
     }
   }
-  for (const { slug, lastmod } of newsItems) {
+  for (const { slug, lastmod, title } of newsItems) {
     if (slug && !seen.has(`news/${slug}`)) {
       seen.add(`news/${slug}`);
-      entries.push({ path: `/news/${slug}`, lastmod });
+      entries.push({ path: `/news/${slug}`, lastmod, title });
     }
   }
-  for (const { slug, lastmod } of trendingNewsItems) {
+  for (const { slug, lastmod, title } of trendingNewsItems) {
     if (slug && !seen.has(`news/${slug}`)) {
       seen.add(`news/${slug}`);
-      entries.push({ path: `/news/${slug}`, lastmod });
+      entries.push({ path: `/news/${slug}`, lastmod, title });
     }
   }
   for (const { slug, lastmod } of casinoArticleItems) {

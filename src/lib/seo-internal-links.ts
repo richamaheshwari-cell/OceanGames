@@ -40,11 +40,16 @@ export function injectContextualLinks(html: string): string {
 
   const processText = (text: string): string => {
     let result = text;
-    for (const { pattern, href } of KEYWORD_LINKS) {
-      result = result.replace(pattern, (m) => {
-        return `<a href="${href}" class="seo-internal-link">${m}</a>`;
-      });
+   for (const { pattern, href } of KEYWORD_LINKS) {
+  let count = 0;
+  result = result.replace(pattern, (m) => {
+    if (count === 0) {
+      count++;
+      return `<a href="${href}" class="seo-internal-link">${m}</a>`;
     }
+    return m;
+  });
+}
     return result;
   };
 

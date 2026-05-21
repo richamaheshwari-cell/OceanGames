@@ -256,7 +256,8 @@ export default async function CasinoDetailPage({
               alt=""
               fill
               priority
-              sizes="100vw"
+              unoptimized
+              sizes="(max-width: 768px) 100vw, 1200px"
               style={{
                 objectFit: "cover",
                 objectPosition: "center",
@@ -377,7 +378,9 @@ export default async function CasinoDetailPage({
                           alt=""
                           fill
                           sizes="112px"
+                          fetchPriority="low"
                           style={{ objectFit: "cover" }}
+                          unoptimized
                         />
                       </Box>
                     )}
@@ -391,7 +394,7 @@ export default async function CasinoDetailPage({
                       >
                         <Typography
                           variant="h4"
-                          component="h3"
+                          component="div"
                           sx={{
                             fontWeight: 800,
                             fontSize: {

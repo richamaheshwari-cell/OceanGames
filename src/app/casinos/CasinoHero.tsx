@@ -12,10 +12,10 @@ export function CasinoHero() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        // ✅ Hero goes behind fixed navbar
+        //  Hero goes behind fixed navbar
         mt: { xs: "-56px", md: "-64px" },
 
-        // ✅ push content down so it doesn't hide behind navbar
+        //  push content down so it doesn't hide behind navbar
         pt: { xs: "56px", md: "64px" },
       }}
     >
@@ -24,8 +24,9 @@ export function CasinoHero() {
         alt="Casino"
         fill
         priority
-        sizes="100vw"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1600px"
         style={{ objectFit: "cover", objectPosition: "center" }}
+        unoptimized
       />
       <Box
         sx={{

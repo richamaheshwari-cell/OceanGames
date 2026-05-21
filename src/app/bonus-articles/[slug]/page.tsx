@@ -165,6 +165,7 @@ function SidebarItem({
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
+              unoptimized
             />
           </Box>
         )}
@@ -245,7 +246,7 @@ export default async function BonusArticlePage({
             alt={h1Title}
             fill
             style={{ objectFit: "cover", zIndex: 0 }}
-            sizes="(max-width: 1920px) 100vw, 1920px"
+            unoptimized
           />
         )}
         <Box
@@ -316,7 +317,7 @@ export default async function BonusArticlePage({
           </Typography>
           {editor?.id ? (
             <Link
-              href={`/authors/${editor.id}`}
+              href={`/authors/${encodeURIComponent(editor.name)}`}
               style={{
                 fontSize: "0.875rem",
                 fontWeight: 600,
@@ -392,6 +393,7 @@ export default async function BonusArticlePage({
                       width={40}
                       height={40}
                       style={{ objectFit: "cover" }}
+                      unoptimized
                     />
                   </Box>
                 ) : (
@@ -422,7 +424,7 @@ export default async function BonusArticlePage({
                   </Typography>
                   {editor?.id ? (
                     <Link
-                      href={`/authors/${editor.id}`}
+                      href={`/authors/${encodeURIComponent(editor.name)}`}
                       style={{
                         fontSize: "0.875rem",
                         fontWeight: 600,

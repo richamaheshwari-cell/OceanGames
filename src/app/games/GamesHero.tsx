@@ -18,8 +18,10 @@ export function GamesHero() {
         src="/hero.webp"
         alt="Casino games"
         fill
+        priority
         sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
+        unoptimized
       />
       <Box
         sx={{

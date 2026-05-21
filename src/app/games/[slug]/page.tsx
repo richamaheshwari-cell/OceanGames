@@ -214,12 +214,13 @@ export default async function GameDetailPage({
             alt=""
             fill
             priority
-            sizes="100vw"
+            // sizes="100vw"
             style={{
               objectFit: "cover",
               objectPosition: "center",
               transform: "scale(1.04)",
             }}
+            unoptimized
           />
           <Box
             sx={{
@@ -328,14 +329,15 @@ export default async function GameDetailPage({
                           src={cover}
                           alt={game.title}
                           fill
-                          sizes="112px"
+                          // sizes="112px"
                           style={{ objectFit: "cover" }}
+                          unoptimized
                         />
                       </Box>
                     )}
                     <Box sx={{ minWidth: 0 }}>
                       <Typography
-                        component="h3"
+                        component="div"
                         sx={{
                           fontWeight: 800,
                           fontSize: { xs: "1.45rem", md: "2rem" },

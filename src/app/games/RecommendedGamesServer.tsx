@@ -113,6 +113,10 @@ export async function RecommendedGamesServer({
                         src={img}
                         alt={game.title}
                         loading="lazy"
+                        width="400"
+                        height="160"
+                        decoding="async"
+                        fetchPriority="low"
                         sx={{
                           position: "absolute",
                           inset: 0,

@@ -31,7 +31,6 @@ type AuthorStats = {
 };
 
 type AuthorProfile = {
-  id: string;
   name: string;
   avatarUrl?: string | null;
   bio?: string | null;
@@ -140,20 +139,23 @@ function postHref(type: Exclude<AuthorTab, "all">, slug: string) {
   return `/bonus-articles/${slug}`;
 }
 
-function hrefForTab(authorId: string, tab: AuthorTab) {
-  if (tab === "all") return `/authors/${authorId}`;
-  return `/authors/${authorId}?${TAB_QUERY_KEY}=${tab}`;
+function hrefForTab(authorName: string, tab: AuthorTab) {
+  const encodedName = encodeURIComponent(authorName.toLowerCase());
+  if (tab === "all") return `/authors/${encodedName}`;
+  return `/authors/${encodedName}?${TAB_QUERY_KEY}=${tab}`;
 }
 
-async function getAuthor(id: string): Promise<AuthorProfile | null> {
+// Fetch author by name using the new API endpoint
+async function getAuthorByName(name: string): Promise<AuthorProfile | null> {
   try {
-    const res = await fetch(ENDPOINTS.editors(id), {
-      next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
-    });
+    const encodedName = encodeURIComponent(name.toLowerCase());
+    const url = `${API_BASE}/author/${encodedName}`;
+    const res = await fetch(url);
     if (!res.ok) return null;
     const json = await res.json();
     return (json.data ?? json) as AuthorProfile;
-  } catch {
+  } catch (error) {
+    console.error("Error fetching author by name:", error);
     return null;
   }
 }
@@ -269,10 +271,11 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
   searchParams: Promise<QueryMap>;
 }): Promise<Metadata> {
-  const { id } = await params;
+  const { id: nameParam } = await params;
   const qp = await searchParams;
   const tab = readTab(qp[TAB_QUERY_KEY]);
-  const author = await getAuthor(id);
+  const author = await getAuthorByName(nameParam);
+  console.log("author", author)
   if (!author) return { title: "Author | TheOceanGame" };
   const tabSuffix =
     tab === "all"
@@ -282,7 +285,7 @@ export async function generateMetadata({
   const desc =
     author.bio ??
     `View profile and articles by ${author.name} on TheOceanGame.`;
-  const url = `/authors/${id}`;
+  const url = `/authors/${encodeURIComponent(author.name.toLowerCase())}`;
   return {
     title,
     description: desc,
@@ -311,23 +314,24 @@ export default async function AuthorProfilePage({
   params: Promise<{ id: string }>;
   searchParams: Promise<QueryMap>;
 }) {
-  const { id } = await params;
+  const { id: nameParam } = await params;
   const qp = await searchParams;
   const tab = readTab(qp[TAB_QUERY_KEY]);
   const page = readPageParam(qp[PAGE_QUERY_KEY], 1);
-  const author = await getAuthor(id);
+  const author = await getAuthorByName(nameParam);
 
   if (!author) notFound();
 
   const avatarSrc = imgSrc(author.avatarUrl);
   const initial = author.name?.trim().charAt(0).toUpperCase() || "?";
   const stats = getAggregatedStats(author.stats);
-  const authorUrl = `/authors/${author.id}`;
+  const encodedName = encodeURIComponent(author.name.toLowerCase());
+  const authorUrl = `/authors/${encodedName}`;
   const {
     items: feedItems,
     totalPages,
     safePage,
-  } = await getAuthorFeed(author.id, tab, page);
+  } = await getAuthorFeed(author.name.toLowerCase(), tab, page);
   const breadcrumbItems = [
     { name: "Home", url: "/" },
     { name: "Authors", url: "/" },
@@ -338,7 +342,7 @@ export default async function AuthorProfilePage({
     <>
       <JsonLdScript
         data={buildAuthorJsonLd({
-          id: author.id,
+          id: author.name,
           name: author.name,
           bio: author.bio,
           image: author.avatarUrl,
@@ -429,6 +433,7 @@ export default async function AuthorProfilePage({
                     width={120}
                     height={120}
                     style={{ objectFit: "cover" }}
+                    unoptimized
                   />
                 ) : (
                   <Typography
@@ -523,7 +528,7 @@ export default async function AuthorProfilePage({
               return (
                 <Link
                   key={tabItem.key}
-                  href={hrefForTab(author.id, tabItem.key)}
+                  href={hrefForTab(author.name.toLowerCase(), tabItem.key)}
                   style={{ textDecoration: "none" }}
                 >
                   <Box

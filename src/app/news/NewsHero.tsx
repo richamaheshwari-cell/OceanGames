@@ -23,8 +23,10 @@ export function NewsHero() {
         src="/hero.webp"
         alt="Casino News & Updates"
         fill
+        priority
         sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
+        unoptimized
       />
       <Box
         sx={{
