@@ -41,7 +41,6 @@ export default async function CasinosPage({ searchParams }: PageProps) {
   const page = readPageParam(params.page, 1);
   const snapshot = await fetchItemListSnapshot(ENDPOINTS.casinos, "casinos", 8);
 
-  console.log("casinos snapshot", snapshot);
   return (
     <>
       <JsonLdScript

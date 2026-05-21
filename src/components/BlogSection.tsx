@@ -116,7 +116,6 @@ export async function BlogSection() {
             {items.map((article) => {
               if (!article || !article.id || !article.slug || !article.title)
                 return null;
-              console.log("Article:", article);
               const resolvedImg = normalizeImageUrl(
                 article.featureImg ?? article.image ?? null,
               );

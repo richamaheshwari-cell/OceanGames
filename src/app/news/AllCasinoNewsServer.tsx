@@ -55,7 +55,6 @@ export async function AllCasinoNewsServer({
     const res = await fetch(`${API_PUBLIC}/news?page=${page}&limit=${limit}`, {
       next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
     });
-    console.log("res", res);
     const json = await res.json().catch(() => null);
     const root = (json?.data ?? json) as {
       items?: Item[];
@@ -63,7 +62,6 @@ export async function AllCasinoNewsServer({
     } | null;
     items = Array.isArray(root?.items) ? root!.items : [];
     totalPages = Number(root?.totalPages ?? 1) || 1;
-    console.log("nedssdasghdvw", root);
   } catch {
     items = [];
     totalPages = 1;

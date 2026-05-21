@@ -37,27 +37,38 @@ async function getCmsSeo(slug: string): Promise<CmsSeoRecord | null> {
   return (json.data ?? json) as CmsSeoRecord;
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
   const cms = await getCmsSeo("blog");
   const title = cms?.seoTitle?.trim() || TITLE;
   const description = cms?.seoDesc?.trim() || DESC;
   const ogImage = resolveImageUrl(
     cms?.seoImage ?? cms?.featureImg ?? cms?.image,
   );
+
+  const params = (await searchParams) ?? {};
+  const blogsPage = readPageParam(params.blogsPage, 1);
+
+  const canonical = blogsPage > 1 ? `/blog?blogsPage=${blogsPage}` : "/blog";
+
   return {
     title,
     description,
     keywords: Array.isArray(cms?.focusKeywords)
       ? cms?.focusKeywords
       : undefined,
-    alternates: buildLocaleAlternates("/blog"),
+    alternates: {
+      ...buildLocaleAlternates(canonical),
+      canonical,
+    },
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com",
     ),
     openGraph: buildOpenGraph({
       title,
       description,
-      url: "/blog",
+      url: canonical,
       image: ogImage ?? undefined,
       type: "website",
     }),
@@ -78,13 +89,16 @@ export default async function BlogPage({ searchParams }: PageProps) {
   const featuredBlogsPage = readPageParam(params.featuredBlogsPage, 1);
   const blogsPage = readPageParam(params.blogsPage, 1);
   const snapshot = await fetchItemListSnapshot(ENDPOINTS.blogs, "blog", 8);
+
+  const canonical = blogsPage > 1 ? `/blog?blogsPage=${blogsPage}` : "/blog";
+
   return (
     <>
       {/* SEO and JSON-LD handled by generateMetadata and JsonLdScript. Headline is rendered by BlogHero as <h1>. */}
       <JsonLdScript
         data={buildCollectionJsonLd({
           name: TITLE,
-          url: "/blog",
+          url: canonical,
           description: DESC,
         })}
       />

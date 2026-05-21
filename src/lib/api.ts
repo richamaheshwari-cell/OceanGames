@@ -10,7 +10,6 @@
  */
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
-console.log("API_BASE", API_BASE)
 /** Revalidate SEO page data every N seconds (short cache, fewer backend calls). */
 export const SEO_CACHE_REVALIDATE_SECONDS = 60;
 export const API_PUBLIC = `${API_BASE}/api/v1/public`;

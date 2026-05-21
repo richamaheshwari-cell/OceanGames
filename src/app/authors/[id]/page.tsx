@@ -275,7 +275,6 @@ export async function generateMetadata({
   const qp = await searchParams;
   const tab = readTab(qp[TAB_QUERY_KEY]);
   const author = await getAuthorByName(nameParam);
-  console.log("author", author)
   if (!author) return { title: "Author | TheOceanGame" };
   const tabSuffix =
     tab === "all"

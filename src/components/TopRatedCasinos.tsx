@@ -47,7 +47,6 @@ export async function TopRatedCasinos({
     items: CasinoItem[];
     totalPages: number;
   };
-  console.log("top rated casinos", { items, totalPages });
   const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
 
   return (

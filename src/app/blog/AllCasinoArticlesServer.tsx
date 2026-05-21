@@ -78,18 +78,14 @@ export async function AllCasinoArticlesServer({
         cache: "no-store",
       },
     );
-    console.log("res", res);
     const json = await res.json().catch(() => null);
     const root = (json?.data ?? json) as {
       items?: Item[];
       totalPages?: number;
     } | null;
-    console.log("root", root);
     items = Array.isArray(root?.items) ? root!.items : [];
     totalPages = Number(root?.totalPages ?? 1) || 1;
-    console.log("items", items, totalPages);
   } catch (err) {
-    console.log("err", err);
     items = [];
     totalPages = 1;
   }
@@ -133,7 +129,6 @@ export async function AllCasinoArticlesServer({
             items.map((article) => {
               const img = normalizeImageUrl(article.featureImg) ?? null;
               const href = `${SITE_URL}${article.href}`;
-              console.log("blog schema", article);
               return (
                 <>
                   <JsonLdScript
