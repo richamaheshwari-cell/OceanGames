@@ -9,12 +9,13 @@ import MenuBook from "@mui/icons-material/MenuBook";
 import Newspaper from "@mui/icons-material/Newspaper";
 import { API_BASE, SEO_CACHE_REVALIDATE_SECONDS } from "@/lib/api";
 import { TiptapHtmlServer } from "@/components/TiptapHtmlServer";
-import { JsonLd, BreadcrumbJsonLd } from "@/components/JsonLd";
+import { JsonLd, BreadcrumbJsonLd, JsonLdScript } from "@/components/JsonLd";
 import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { contentToMetadata, getTitle, getWordCountFromHtml } from "@/lib/seo";
 import { tiptapJsonToHtml } from "@/lib/tiptap-server";
 import EditIcon from "@mui/icons-material/Edit";
+import { generateNewsSchema } from "@/lib/schema/newsSchema";
 type Editor = { id: string; name: string; avatarUrl?: string | null };
 type RelatedItem = {
   id: string;
@@ -220,12 +221,20 @@ export default async function NewsArticlePage({
   return (
     <>
       <ReadingProgressBar />
-      <JsonLd
-        record={news}
-        routeBase="news"
-        schemaType="Article"
-        isNews
-        wordCount={wordCount}
+      <JsonLdScript
+        data={generateNewsSchema({
+          url: `https://theoceangame.com/news/${news.slug}`,
+          title: h1Title,
+          description: news.shortDesc ?? "",
+          image: imgSrc(news.featureImg) || undefined,
+          datePublished: news.publishDate ?? undefined,
+          dateModified: news.updatedAt ?? news.publishDate ?? undefined,
+          author: {
+            name: news.editor?.name || "TheOceanGame",
+            slug: "theoceangame",
+            image: news.editor?.avatarUrl || undefined,
+          },
+        })}
       />
       <BreadcrumbJsonLd items={breadcrumbItems} />
       <Box

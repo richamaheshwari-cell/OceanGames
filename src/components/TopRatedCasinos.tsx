@@ -8,6 +8,8 @@ import {
 } from "@/components/CasinoListingCardServer";
 import { QueryPagination } from "@/components/QueryPagination";
 import { Suspense } from "react";
+import { generateCasinoListSchema } from "@/lib/schema/casinoListSchema";
+import { JsonLdScript } from "./JsonLd";
 
 export type { CasinoItem };
 
@@ -50,6 +52,8 @@ export async function TopRatedCasinos({
   const safePage = Math.min(Math.max(page, 1), Math.max(totalPages, 1));
 
   return (
+    <>
+    <JsonLdScript data={generateCasinoListSchema(items)} />
     <Box
       component="section"
       id="casino"
@@ -160,5 +164,6 @@ export async function TopRatedCasinos({
         ) : null}
       </Box>
     </Box>
+    </>
   );
 }
