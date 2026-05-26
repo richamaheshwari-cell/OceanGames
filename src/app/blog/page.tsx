@@ -37,41 +37,50 @@ async function getCmsSeo(slug: string): Promise<CmsSeoRecord | null> {
   return (json.data ?? json) as CmsSeoRecord;
 }
 
-export async function generateMetadata({
-  searchParams,
-}: PageProps): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   const cms = await getCmsSeo("blog");
+
   const title = cms?.seoTitle?.trim() || TITLE;
   const description = cms?.seoDesc?.trim() || DESC;
+
   const ogImage = resolveImageUrl(
     cms?.seoImage ?? cms?.featureImg ?? cms?.image,
   );
 
-  const params = (await searchParams) ?? {};
-  const blogsPage = readPageParam(params.blogsPage, 1);
-
-  const canonical = blogsPage > 1 ? `/blog?blogsPage=${blogsPage}` : "/blog";
-
   return {
     title,
     description,
+
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+
     keywords: Array.isArray(cms?.focusKeywords)
       ? cms?.focusKeywords
       : undefined,
-    alternates: {
-      ...buildLocaleAlternates(canonical),
-      canonical,
-    },
+
+    alternates: buildLocaleAlternates("/blog"),
+
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com",
     ),
+
     openGraph: buildOpenGraph({
       title,
       description,
-      url: canonical,
+      url: "/blog",
       image: ogImage ?? undefined,
       type: "website",
     }),
+
     twitter: buildTwitter({
       title,
       description,
