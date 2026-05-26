@@ -15,6 +15,8 @@ import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { contentToMetadata, getTitle, getWordCountFromHtml } from "@/lib/seo";
 import { tiptapJsonToHtml } from "@/lib/tiptap-server";
 import EditIcon from "@mui/icons-material/Edit";
+import { generateFaqSchema } from "@/lib/schema/faqSchema";
+
 type Editor = { id: string; name: string; avatarUrl?: string | null };
 type RelatedItem = {
   id: string;
@@ -236,6 +238,7 @@ export default async function BlogArticlePage({
   const content = article.content ?? "";
   const h1Title = getTitle(article);
   const contentHtml = tiptapJsonToHtml(content);
+  const faqSchema = generateFaqSchema(contentHtml);
   const wordCount = getWordCountFromHtml(contentHtml);
 
   const path = `/blog/${article.slug}`;
@@ -255,6 +258,15 @@ export default async function BlogArticlePage({
         wordCount={wordCount}
       />
       <BreadcrumbJsonLd items={breadcrumbItems} />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqSchema),
+          }}
+        />
+      )}
+
       <Box
         sx={{
           position: "relative",

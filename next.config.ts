@@ -1,6 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: "standalone",
+
+  async redirects() {
+    return [
+      {
+        source: "/Home",
+        destination: "/",
+        permanent: true, // 308 permanent redirect
+      },
+    ];
+  },
+
   async headers() {
     return [
       // MAIN WEBSITE PAGES

@@ -134,6 +134,7 @@ export function CasinoGamesSection({
             }}
           >
             {games.map((game) => {
+              console.log("game", game);
               const src = gameImg(game.featureImg);
               const provider = (game.gameProvider ?? [])[0];
               const rtp =

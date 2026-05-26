@@ -32,6 +32,7 @@ import {
   type GameCardItem,
   type GameDetailRecord,
 } from "./gameDetailFetch";
+import { generateGamesCardSchema } from "@/lib/schema/gamesListSchema";
 
 function imgSrc(url: string | null | undefined) {
   return normalizeImageUrl(url);
@@ -192,12 +193,26 @@ export default async function GameDetailPage({
   const { casinoName, items: relatedGames } = await getRelatedGames(game);
   const relatedTitle = casinoName?.trim() || "Related Games";
   const playHref = game.clientLink?.trim() || "";
-
+  
+  const gamesCardSchema = generateGamesCardSchema(
+    relatedGames.map((game) => ({
+      title: game.title,
+      slug: game.slug,
+      featureImg: game.featureImg,
+      tag: game.tag,
+      gameProvider: game.gameProvider,
+    })),
+  );
   return (
     <>
       <JsonLd record={record} routeBase="games" schemaType="WebPage" />
       <BreadcrumbJsonLd items={breadcrumbItems} />
-
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(gamesCardSchema).replace(/</g, "\\u003c"),
+        }}
+      />
       <Box component="article" sx={{ bgcolor: PAGE_BG, minHeight: "100%" }}>
         <Box
           sx={{
