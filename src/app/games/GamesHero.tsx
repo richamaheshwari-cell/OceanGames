@@ -21,7 +21,7 @@ export function GamesHero() {
         priority
         sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
-        unoptimized
+        // unoptimized
       />
       <Box
         sx={{

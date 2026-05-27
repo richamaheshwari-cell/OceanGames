@@ -1,18 +1,11 @@
 import type { Metadata, Viewport } from "next";
-import dynamic from "next/dynamic";
 import Script from "next/script";
 import "./globals.css";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { ThemeRegistry } from "@/components/ThemeRegistry";
 import { NavbarClient } from "@/components/NavbarClient";
 import { SITE_LANGUAGE, SITE_URL, buildLocaleAlternates } from "@/lib/seo";
-
-const Footer = dynamic(
-  () => import("@/components/Footer").then((m) => ({ default: m.Footer })),
-  {
-    ssr: true,
-  },
-);
+import { Footer } from "@/components/Footer";
 
 const SITE_NAME = "TheOceanGame";
 const DEFAULT_TITLE = "Online Casino Reviews, Bonuses & Expert Guides";
@@ -47,7 +40,7 @@ export const metadata: Metadata = {
     template: `%s | ${SITE_NAME}`,
   },
   description: DESCRIPTION,
-}
+};
 
 export default function RootLayout({
   children,

@@ -1,0 +1,35 @@
+.casino-text-decoration {
+  text-decoration: none;
+}
+.navbar-drawer-link-text-decoration {
+  text-decoration: none;
+  display: -ms-flexbox;
+}
+.navbar-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+.common-text-decoration {
+  text-decoration: none;
+}
+.gamesection-slug-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  flex-shrink: 0;
+}
+.gamesection-line-177 {
+  text-decoration: none;
+  color: inherit;
+}
+.footer-logo-description {
+  display: inline-block;
+  text-decoration: none;
+  margin-bottom: 0;
+}
+.blogsection-img-154{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}

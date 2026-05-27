@@ -6,6 +6,7 @@ import Schedule from "@mui/icons-material/Schedule";
 import ArrowForward from "@mui/icons-material/ArrowForward";
 import { API_PUBLIC } from "@/lib/api";
 import { normalizeImageUrl } from "@/lib/image-url";
+import "./style.css";
 
 type BlogItem = {
   id: string;
@@ -303,7 +304,7 @@ export async function BlogSection() {
         )}
 
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <Link href="/blog" style={{ textDecoration: "none" }}>
+          <Link href="/blog" className="common-text-decoration">
             <Button
               variant="contained"
               sx={{

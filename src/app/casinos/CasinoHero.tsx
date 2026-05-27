@@ -26,7 +26,6 @@ export function CasinoHero() {
         priority
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 1200px, 1600px"
         style={{ objectFit: "cover", objectPosition: "center" }}
-        unoptimized
       />
       <Box
         sx={{

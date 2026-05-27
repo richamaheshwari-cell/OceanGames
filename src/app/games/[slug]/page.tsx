@@ -65,7 +65,9 @@ async function getCasinoNameBySlug(slug: string): Promise<string | null> {
   const res = await fetch(ENDPOINTS.casino(slug), {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
+
   if (!res.ok) return null;
+
   const json = await res.json();
   const root = (json?.data ?? json) as {
     casinoName?: string;
@@ -193,7 +195,7 @@ export default async function GameDetailPage({
   const { casinoName, items: relatedGames } = await getRelatedGames(game);
   const relatedTitle = casinoName?.trim() || "Related Games";
   const playHref = game.clientLink?.trim() || "";
-  
+
   const gamesCardSchema = generateGamesCardSchema(
     relatedGames.map((game) => ({
       title: game.title,
@@ -235,7 +237,6 @@ export default async function GameDetailPage({
               objectPosition: "center",
               transform: "scale(1.04)",
             }}
-            unoptimized
           />
           <Box
             sx={{
@@ -346,7 +347,6 @@ export default async function GameDetailPage({
                           fill
                           // sizes="112px"
                           style={{ objectFit: "cover" }}
-                          unoptimized
                         />
                       </Box>
                     )}

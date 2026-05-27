@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { JsonLdScript } from "@/components/JsonLd";
 import { StickyToc } from "@/components/StickyToc";
 import { buildBreadcrumbJsonLd, buildWebPageJsonLd } from "@/lib/seo";
+import "./style.css";
 
 const META_TITLE = "Terms and Conditions | TheOceanGame";
 
@@ -140,7 +141,7 @@ export default function TermsPage() {
             title: META_TITLE,
             shortDesc: META_DESC,
           },
-          "pages"
+          "pages",
         )}
       />
 
@@ -163,21 +164,13 @@ export default function TermsPage() {
                 mb: 3,
               }}
             >
-              <Link
-                href="/"
-                style={{
-                  color: "inherit",
-                  textDecoration: "none",
-                }}
-              >
+              <Link href="/" className="terms-link">
                 Home
               </Link>
 
-              <span style={{ margin: "0 0.35rem" }}>/</span>
+              <span className="term-link-span">/</span>
 
-              <span style={{ color: "white" }}>
-                Terms & Conditions
-              </span>
+              <span className="terms-condition-span">Terms & Conditions</span>
             </Box>
 
             {/* Hero Content */}
@@ -247,10 +240,7 @@ export default function TermsPage() {
                 maxHeight: `calc(100vh - ${SCROLL_OFFSET + 16}px)`,
               }}
             >
-              <StickyToc
-                sections={SECTIONS}
-                offset={SCROLL_OFFSET}
-              />
+              <StickyToc sections={SECTIONS} offset={SCROLL_OFFSET} />
             </Box>
 
             {/* Article */}
@@ -264,149 +254,119 @@ export default function TermsPage() {
             >
               {/* 1 */}
               <Box id="introduction" sx={SECTION_SX}>
-                <SectionTitle>
-                  1. Introduction
-                </SectionTitle>
+                <SectionTitle>1. Introduction</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  Welcome to TheOceanGame. These Terms and
-                  Conditions ("Terms") govern your access to and
-                  use of our website, including all content,
-                  features, and services offered on or through
+                  Welcome to TheOceanGame. These Terms and Conditions ("Terms")
+                  govern your access to and use of our website, including all
+                  content, features, and services offered on or through
                   theoceangame.com (the "Website").
                 </Typography>
 
                 <Typography sx={BODY_SX}>
-                  By accessing or using the Website, you agree
-                  to be bound by these Terms. If you do not
-                  agree to these Terms, please do not use the
-                  Website.
+                  By accessing or using the Website, you agree to be bound by
+                  these Terms. If you do not agree to these Terms, please do not
+                  use the Website.
                 </Typography>
 
                 <Typography sx={BODY_SX}>
-                  TheOceanGame is an informational platform
-                  providing casino reviews, game guides,
-                  industry news, and educational content related
-                  to online iGaming and iGaming. We do not
-                  operate any iGaming services directly.
+                  TheOceanGame is an informational platform providing casino
+                  reviews, game guides, industry news, and educational content
+                  related to online iGaming and iGaming. We do not operate any
+                  iGaming services directly.
                 </Typography>
               </Box>
 
               {/* 2 */}
               <Box id="eligibility" sx={SECTION_SX}>
-                <SectionTitle>
-                  2. Eligibility
-                </SectionTitle>
+                <SectionTitle>2. Eligibility</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  You must be at least 18 years of age (or the
-                  legal age of majority in your jurisdiction) to
-                  use this Website. By using the Website, you
-                  represent and warrant that:
+                  You must be at least 18 years of age (or the legal age of
+                  majority in your jurisdiction) to use this Website. By using
+                  the Website, you represent and warrant that:
                 </Typography>
 
                 {renderList(ELIGIBILITY_POINTS)}
 
                 <Typography sx={BODY_SX}>
-                  We reserve the right to verify your age and
-                  identity at any time. Failure to comply may
-                  result in immediate termination of your access
-                  to the Website.
+                  We reserve the right to verify your age and identity at any
+                  time. Failure to comply may result in immediate termination of
+                  your access to the Website.
                 </Typography>
               </Box>
 
               {/* 3 */}
               <Box id="use-of-website" sx={SECTION_SX}>
-                <SectionTitle>
-                  3. Use of Website
-                </SectionTitle>
+                <SectionTitle>3. Use of Website</SectionTitle>
 
-                <SubTitle>
-                  3.1 Permitted Use
-                </SubTitle>
+                <SubTitle>3.1 Permitted Use</SubTitle>
 
                 <Typography sx={BODY_SX}>
-                  You may use the Website for personal,
-                  non-commercial purposes to access information
-                  about online casinos, games, bonuses, and
-                  industry news.
+                  You may use the Website for personal, non-commercial purposes
+                  to access information about online casinos, games, bonuses,
+                  and industry news.
                 </Typography>
 
-                <SubTitle>
-                  3.2 Prohibited Activities
-                </SubTitle>
+                <SubTitle>3.2 Prohibited Activities</SubTitle>
 
-                <Typography sx={BODY_SX}>
-                  You agree not to:
-                </Typography>
+                <Typography sx={BODY_SX}>You agree not to:</Typography>
 
                 {renderList(PROHIBITED_ACTIVITIES)}
               </Box>
 
               {/* 4 */}
               <Box id="intellectual-property" sx={SECTION_SX}>
-                <SectionTitle>
-                  4. Intellectual Property
-                </SectionTitle>
+                <SectionTitle>4. Intellectual Property</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  All content on the Website, including text,
-                  graphics, logos, images, videos, software, and
-                  data compilations, is protected by copyright,
-                  trademark, and intellectual property laws.
+                  All content on the Website, including text, graphics, logos,
+                  images, videos, software, and data compilations, is protected
+                  by copyright, trademark, and intellectual property laws.
                 </Typography>
 
                 <Typography sx={BODY_SX}>
-                  The TheOceanGame name and logo are trademarks
-                  of TheOceanGame.
+                  The TheOceanGame name and logo are trademarks of TheOceanGame.
                 </Typography>
               </Box>
 
               {/* 5 */}
               <Box id="affiliate-disclaimer" sx={SECTION_SX}>
-                <SectionTitle>
-                  5. Affiliate Disclaimer
-                </SectionTitle>
+                <SectionTitle>5. Affiliate Disclaimer</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  TheOceanGame participates in affiliate
-                  marketing programs and may receive
-                  compensation from featured platforms.
+                  TheOceanGame participates in affiliate marketing programs and
+                  may receive compensation from featured platforms.
                 </Typography>
 
                 <Typography sx={BODY_SX}>
-                  Our affiliate relationships do not influence
-                  our editorial content or rankings.
+                  Our affiliate relationships do not influence our editorial
+                  content or rankings.
                 </Typography>
               </Box>
 
               {/* 6 */}
               <Box id="third-party-links" sx={SECTION_SX}>
-                <SectionTitle>
-                  6. Third-Party Links
-                </SectionTitle>
+                <SectionTitle>6. Third-Party Links</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  The Website may contain links to third-party
-                  websites for informational purposes only.
+                  The Website may contain links to third-party websites for
+                  informational purposes only.
                 </Typography>
 
                 <Typography sx={BODY_SX}>
-                  We are not responsible for the content,
-                  privacy practices, or policies of third-party
-                  websites.
+                  We are not responsible for the content, privacy practices, or
+                  policies of third-party websites.
                 </Typography>
               </Box>
 
               {/* 7 */}
               <Box id="limitation-of-liability" sx={SECTION_SX}>
-                <SectionTitle>
-                  7. Limitation of Liability
-                </SectionTitle>
+                <SectionTitle>7. Limitation of Liability</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  The Website is provided "as is" without
-                  warranties of any kind.
+                  The Website is provided "as is" without warranties of any
+                  kind.
                 </Typography>
 
                 <Typography sx={BODY_SX}>
@@ -416,8 +376,8 @@ export default function TermsPage() {
                 {renderList(WEBSITE_WARRANTIES)}
 
                 <Typography sx={BODY_SX}>
-                  To the fullest extent permitted by law,
-                  TheOceanGame shall not be liable for:
+                  To the fullest extent permitted by law, TheOceanGame shall not
+                  be liable for:
                 </Typography>
 
                 {renderList(LIABILITY_POINTS)}
@@ -425,44 +385,37 @@ export default function TermsPage() {
 
               {/* 8 */}
               <Box id="governing-law" sx={SECTION_SX}>
-                <SectionTitle>
-                  8. Governing Law
-                </SectionTitle>
+                <SectionTitle>8. Governing Law</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  These Terms shall be governed in accordance
-                  with the laws of the applicable jurisdiction.
+                  These Terms shall be governed in accordance with the laws of
+                  the applicable jurisdiction.
                 </Typography>
               </Box>
 
               {/* 9 */}
               <Box id="changes-to-terms" sx={SECTION_SX}>
-                <SectionTitle>
-                  9. Changes to Terms
-                </SectionTitle>
+                <SectionTitle>9. Changes to Terms</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  We reserve the right to modify these Terms at
-                  any time.
+                  We reserve the right to modify these Terms at any time.
                 </Typography>
 
                 {renderList(TERMS_UPDATE_POINTS)}
 
                 <Typography sx={BODY_SX}>
-                  Continued use of the Website constitutes
-                  acceptance of revised Terms.
+                  Continued use of the Website constitutes acceptance of revised
+                  Terms.
                 </Typography>
               </Box>
 
               {/* 10 */}
               <Box id="contact-information" sx={SECTION_SX}>
-                <SectionTitle>
-                  10. Contact Information
-                </SectionTitle>
+                <SectionTitle>10. Contact Information</SectionTitle>
 
                 <Typography sx={BODY_SX}>
-                  If you have any questions regarding these
-                  Terms and Conditions, contact us at{" "}
+                  If you have any questions regarding these Terms and
+                  Conditions, contact us at{" "}
                   <Typography
                     component="a"
                     href="mailto:support@theoceangame.com"

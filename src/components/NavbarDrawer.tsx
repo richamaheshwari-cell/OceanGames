@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Drawer, Box, List, ListItem, ListItemButton } from "@mui/material";
+import "./style.css";
 
 const NAV_LINKS = [
   { label: "Casinos", href: "/casinos" },
@@ -26,7 +27,11 @@ export function NavbarDrawer({
       sx={{ "& .MuiDrawer-paper": { width: 260 } }}
     >
       <Box sx={{ px: 2, pt: 2, pb: 1 }}>
-        <Link href="/" onClick={onClose} style={{ display: "flex", textDecoration: "none" }}>
+        <Link
+          href="/"
+          onClick={onClose}
+          className="navbar-drawer-link-text-decoration"
+        >
           <Box
             component="img"
             src="/tog_logo.svg"

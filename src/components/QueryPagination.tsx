@@ -3,21 +3,37 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Box } from "@mui/material";
-
+import "./style.css";
 type QueryPaginationProps = {
   page: number;
   totalPages: number;
   queryKey: string;
 };
 
-function getPageWindow(page: number, totalPages: number): Array<number | "..."> {
-  if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+function getPageWindow(
+  page: number,
+  totalPages: number,
+): Array<number | "..."> {
+  if (totalPages <= 7)
+    return Array.from({ length: totalPages }, (_, i) => i + 1);
   if (page <= 3) return [1, 2, 3, 4, "...", totalPages];
-  if (page >= totalPages - 2) return [1, "...", totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  if (page >= totalPages - 2)
+    return [
+      1,
+      "...",
+      totalPages - 3,
+      totalPages - 2,
+      totalPages - 1,
+      totalPages,
+    ];
   return [1, "...", page - 1, page, page + 1, "...", totalPages];
 }
 
-export function QueryPagination({ page, totalPages, queryKey }: QueryPaginationProps) {
+export function QueryPagination({
+  page,
+  totalPages,
+  queryKey,
+}: QueryPaginationProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -52,53 +68,94 @@ export function QueryPagination({ page, totalPages, queryKey }: QueryPaginationP
   } as const;
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", mt: 4, gap: 0.75, flexWrap: "wrap", alignItems: "center" }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        mt: 4,
+        gap: 0.75,
+        flexWrap: "wrap",
+        alignItems: "center",
+      }}
+    >
       {safePage > 1 ? (
-        <Link href={hrefFor(safePage - 1)} style={{ textDecoration: "none" }} scroll={false}>
+        <Link
+          href={hrefFor(safePage - 1)}
+          className="casino-text-decoration"
+          scroll={false}
+        >
           <Box component="span" sx={navSx} aria-label="Previous page">
             {"<"}
           </Box>
         </Link>
       ) : (
-        <Box component="span" sx={{ ...navSx, color: "text.disabled", borderColor: "action.disabledBackground" }}>
+        <Box
+          component="span"
+          sx={{
+            ...navSx,
+            color: "text.disabled",
+            borderColor: "action.disabledBackground",
+          }}
+        >
           {"<"}
         </Box>
       )}
 
       {windowItems.map((item, idx) =>
         item === "..." ? (
-          <Box key={`ellipsis-${idx}`} component="span" sx={{ px: 0.5, color: "text.secondary", fontWeight: 700 }}>
+          <Box
+            key={`ellipsis-${idx}`}
+            component="span"
+            sx={{ px: 0.5, color: "text.secondary", fontWeight: 700 }}
+          >
             ...
           </Box>
         ) : (
-          <Link key={item} href={hrefFor(item)} style={{ textDecoration: "none" }} scroll={false}>
+          <Link
+            key={item}
+            href={hrefFor(item)}
+            className="casino-text-decoration"
+            scroll={false}
+          >
             <Box
               component="span"
               sx={{
                 ...navSx,
-                bgcolor: item === safePage ? "primary.main" : "background.paper",
+                bgcolor:
+                  item === safePage ? "primary.main" : "background.paper",
                 borderColor: item === safePage ? "primary.main" : "divider",
-                color: item === safePage ? "primary.contrastText" : "text.primary",
+                color:
+                  item === safePage ? "primary.contrastText" : "text.primary",
               }}
             >
               {item}
             </Box>
           </Link>
-        )
+        ),
       )}
 
       {safePage < totalPages ? (
-        <Link href={hrefFor(safePage + 1)} style={{ textDecoration: "none" }} scroll={false}>
+        <Link
+          href={hrefFor(safePage + 1)}
+          className="column-resize-dragging"
+          scroll={false}
+        >
           <Box component="span" sx={navSx} aria-label="Next page">
             {">"}
           </Box>
         </Link>
       ) : (
-        <Box component="span" sx={{ ...navSx, color: "text.disabled", borderColor: "action.disabledBackground" }}>
+        <Box
+          component="span"
+          sx={{
+            ...navSx,
+            color: "text.disabled",
+            borderColor: "action.disabledBackground",
+          }}
+        >
           {">"}
         </Box>
       )}
     </Box>
   );
 }
-

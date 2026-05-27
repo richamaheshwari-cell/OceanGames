@@ -162,7 +162,6 @@ function SidebarItem({
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
-              unoptimized
             /> */}
             <img
               src={src}
@@ -386,7 +385,6 @@ export default async function NewsArticlePage({
                       alt={editor.name}
                       width={40}
                       height={40}
-                      unoptimized
                       style={{ objectFit: "cover" }}
                     />
                   </Box>

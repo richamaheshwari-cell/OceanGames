@@ -87,12 +87,12 @@ function imgSrc(url: string | null | undefined) {
     ? url
     : `${API_BASE}${url.startsWith("/") ? "" : "/"}${url}`;
 }
-
 async function getArticle(slug: string): Promise<ArticleResponse | null> {
   const base = process.env.NEXT_PUBLIC_API_URL;
-  const res = await fetch(`${base}/api/v1/public/game-articles/${slug}`, {
+  const res = await fetch(`${API_BASE}/api/v1/public/game-articles/${slug}`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
+
   if (!res.ok) return null;
   const json = await res.json();
   return (json.data ?? json) as ArticleResponse;
@@ -172,7 +172,6 @@ function SidebarItem({
               height={56}
               loading="lazy"
               style={{ objectFit: "cover" }}
-              unoptimized
             />
           </Box>
         )}
@@ -202,7 +201,6 @@ export default async function GameArticlePage({
 }) {
   const { slug } = await params;
   const article = await getArticle(slug);
-
   if (!article) notFound();
 
   const relatedGames = article.relatedArticleGames ?? [];
@@ -213,7 +211,7 @@ export default async function GameArticlePage({
   const contentHtml = tiptapJsonToHtml(content);
   const wordCount = getWordCountFromHtml(contentHtml);
 
-  const path = `/game-articles/${article.slug}`;
+  const path = `${process.env.NEXT_PUBLIC_BASE_URL}/game-articles/${article.slug}`;
   const h1Title = getTitle(article);
   const breadcrumbItems = [
     { name: "Home", url: "/" },
@@ -250,7 +248,6 @@ export default async function GameArticlePage({
             priority
             sizes="100vw"
             style={{ objectFit: "cover", zIndex: 0 }}
-            unoptimized
           />
         )}
         <Box
@@ -397,7 +394,6 @@ export default async function GameArticlePage({
                       width={40}
                       height={40}
                       style={{ objectFit: "cover" }}
-                      unoptimized
                     />
                   </Box>
                 ) : (
@@ -634,7 +630,6 @@ export default async function GameArticlePage({
                           loading="lazy"
                           style={{ objectFit: "cover" }}
                           // sizes="220px"
-                          unoptimized
                         />
                       ) : (
                         <Box

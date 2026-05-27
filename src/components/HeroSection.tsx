@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Box, Typography, Button, Stack } from "@mui/material";
-
+import "./style.css";
 const STATS = [
   { value: "500+", label: "Casinos Reviewed" },
   { value: "$2M+", label: "Bonuses Available" },
@@ -37,7 +37,7 @@ export function HeroSection() {
           objectFit: "cover",
           objectPosition: "center",
         }}
-        unoptimized
+        // unoptimized
       />
 
       <Box
@@ -97,7 +97,7 @@ export function HeroSection() {
           justifyContent="center"
           alignItems={{ xs: "stretch", sm: "center" }}
         >
-          <Link href="/casinos" style={{ textDecoration: "none" }}>
+          <Link href="/casinos" className="common-text-decoration">
             <Button
               sx={{
                 bgcolor: "white",
@@ -115,7 +115,7 @@ export function HeroSection() {
             </Button>
           </Link>
 
-          <Link href="/bonus" style={{ textDecoration: "none" }}>
+          <Link href="/bonus" className="common-text-decoration">
             <Button
               variant="outlined"
               sx={{

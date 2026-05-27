@@ -10,7 +10,7 @@ import { QueryPagination } from "@/components/QueryPagination";
 import { Suspense } from "react";
 import { generateCasinoListSchema } from "@/lib/schema/casinoListSchema";
 import { JsonLdScript } from "./JsonLd";
-
+import "./style.css";
 export type { CasinoItem };
 
 const casinosFetcher = async (page: number, limit: number) => {
@@ -53,117 +53,117 @@ export async function TopRatedCasinos({
 
   return (
     <>
-    <JsonLdScript data={generateCasinoListSchema(items)} />
-    <Box
-      component="section"
-      id="casino"
-      sx={{ py: 6, px: 3, bgcolor: "background.paper" }}
-    >
-      <Box sx={{ maxWidth: 1280, mx: "auto" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 2,
-            mb: 4,
-          }}
-        >
-          <Box>
-            <Typography
-              variant="h4"
-              sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}
-            >
-              Top Rated{" "}
-              <Box component="span" sx={{ color: "primary.main" }}>
-                Casinos
-              </Box>
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Handpicked casinos with the best ratings and player reviews
-            </Typography>
-          </Box>
-        </Box>
-
-        {items.length > 0 ? (
+      <JsonLdScript data={generateCasinoListSchema(items)} />
+      <Box
+        component="section"
+        id="casino"
+        sx={{ py: 6, px: 3, bgcolor: "background.paper" }}
+      >
+        <Box sx={{ maxWidth: 1280, mx: "auto" }}>
           <Box
-            sx={
-              isHome
-                ? {
-                    display: "grid",
-                    alignItems: "stretch",
-                    gridTemplateColumns: {
-                      xs: `repeat(4, minmax(260px, ${300}px))`,
-                      lg: "repeat(4, minmax(0, 1fr))",
-                    },
-                    gap: 2,
-                    width: "100%",
-                    overflowX: { xs: "auto", lg: "visible" },
-                    overflowY: "hidden",
-                    pb: 1,
-                    WebkitOverflowScrolling: "touch",
-                  }
-                : {
-                    display: "grid",
-                    alignItems: "stretch",
-                    gap: 2,
-                    gridTemplateColumns: {
-                      xs: "1fr",
-                      sm: "1fr 1fr",
-                      lg: "repeat(4, 1fr)",
-                      xl: "repeat(4, 1fr)",
-                    },
-                    justifyItems: "center",
-                  }
-            }
+            sx={{
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: 2,
+              mb: 4,
+            }}
           >
-            {items.map((casino) => (
-              <CasinoListingCardServer
-                key={casino.id}
-                casino={casino}
-                variant={isHome ? "home" : "default"}
-              />
-            ))}
-          </Box>
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No casinos available right now.
-          </Typography>
-        )}
-
-        {showPagination && !isHome ? (
-          <Suspense fallback={null}>
-            <QueryPagination
-              page={safePage}
-              totalPages={totalPages}
-              queryKey={queryKey}
-            />
-          </Suspense>
-        ) : null}
-
-        {isHome && items.length > 0 ? (
-          <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-            <Link href="/casinos" style={{ textDecoration: "none" }}>
-              <Button
-                variant="contained"
-                endIcon={<ArrowForward />}
-                sx={{
-                  bgcolor: "grey.900",
-                  color: "white",
-                  px: 4,
-                  py: 1.5,
-                  fontWeight: 600,
-                  "&:hover": { bgcolor: "primary.main" },
-                }}
+            <Box>
+              <Typography
+                variant="h4"
+                sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}
               >
-                See more
-              </Button>
-            </Link>
+                Top Rated{" "}
+                <Box component="span" sx={{ color: "primary.main" }}>
+                  Casinos
+                </Box>
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Handpicked casinos with the best ratings and player reviews
+              </Typography>
+            </Box>
           </Box>
-        ) : null}
+
+          {items.length > 0 ? (
+            <Box
+              sx={
+                isHome
+                  ? {
+                      display: "grid",
+                      alignItems: "stretch",
+                      gridTemplateColumns: {
+                        xs: `repeat(4, minmax(260px, ${300}px))`,
+                        lg: "repeat(4, minmax(0, 1fr))",
+                      },
+                      gap: 2,
+                      width: "100%",
+                      overflowX: { xs: "auto", lg: "visible" },
+                      overflowY: "hidden",
+                      pb: 1,
+                      WebkitOverflowScrolling: "touch",
+                    }
+                  : {
+                      display: "grid",
+                      alignItems: "stretch",
+                      gap: 2,
+                      gridTemplateColumns: {
+                        xs: "1fr",
+                        sm: "1fr 1fr",
+                        lg: "repeat(4, 1fr)",
+                        xl: "repeat(4, 1fr)",
+                      },
+                      justifyItems: "center",
+                    }
+              }
+            >
+              {items.map((casino) => (
+                <CasinoListingCardServer
+                  key={casino.id}
+                  casino={casino}
+                  variant={isHome ? "home" : "default"}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No casinos available right now.
+            </Typography>
+          )}
+
+          {showPagination && !isHome ? (
+            <Suspense fallback={null}>
+              <QueryPagination
+                page={safePage}
+                totalPages={totalPages}
+                queryKey={queryKey}
+              />
+            </Suspense>
+          ) : null}
+
+          {isHome && items.length > 0 ? (
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+              <Link href="/casinos" className="casino-text-decoration">
+                <Button
+                  variant="contained"
+                  endIcon={<ArrowForward />}
+                  sx={{
+                    bgcolor: "grey.900",
+                    color: "white",
+                    px: 4,
+                    py: 1.5,
+                    fontWeight: 600,
+                    "&:hover": { bgcolor: "primary.main" },
+                  }}
+                >
+                  See more
+                </Button>
+              </Link>
+            </Box>
+          ) : null}
+        </Box>
       </Box>
-    </Box>
     </>
   );
 }

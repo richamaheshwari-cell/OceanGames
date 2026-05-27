@@ -28,7 +28,7 @@ export function GamesInsightsHero() {
         priority
         sizes="100vw"
         style={{ objectFit: "cover", objectPosition: "center" }}
-        unoptimized
+        // unoptimized
       />
       <Box
         sx={{

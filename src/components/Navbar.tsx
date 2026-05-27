@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AppBar, Toolbar, Button, IconButton, Box } from "@mui/material";
@@ -9,6 +8,9 @@ import { PageLoader } from "@/components/PageLoader";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
 import { SITE_URL } from "@/lib/seo";
+import { NavbarDrawer } from "@/components/NavbarDrawer";
+import { SearchOverlay } from "@/components/SearchOverlay";
+import "./style.css";
 
 const NAV_LINKS = [
   { label: "Casinos", href: "/casinos" },
@@ -37,21 +39,7 @@ const HERO_ROUTES = new Set([
   "/news",
 ]);
 
-const NavbarDrawerLazy = dynamic(
-  () =>
-    import("@/components/NavbarDrawer").then((m) => ({
-      default: m.NavbarDrawer,
-    })),
-  { ssr: false },
-);
-
-const SearchOverlayLazy = dynamic(
-  () =>
-    import("@/components/SearchOverlay").then((m) => ({
-      default: m.SearchOverlay,
-    })),
-  { ssr: false },
-);
+// Static imports above
 
 function isLogoLcpPage(pathname: string | null): boolean {
   if (!pathname) return false;
@@ -153,14 +141,7 @@ export function Navbar() {
             <MenuIcon />
           </IconButton>
 
-          <Link
-            href="/"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              textDecoration: "none",
-            }}
-          >
+          <Link href="/" className="navbar-link">
             <Box
               component="img"
               src={`${SITE_URL}/tog_logo.svg`}
@@ -208,14 +189,11 @@ export function Navbar() {
       </AppBar>
 
       {mobileOpen && (
-        <NavbarDrawerLazy
-          open={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-        />
+        <NavbarDrawer open={mobileOpen} onClose={() => setMobileOpen(false)} />
       )}
 
       {searchOpen && (
-        <SearchOverlayLazy
+        <SearchOverlay
           open={searchOpen}
           onClose={() => {
             setSearchOpen(false);

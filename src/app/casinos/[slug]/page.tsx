@@ -256,7 +256,6 @@ export default async function CasinoDetailPage({
               alt=""
               fill
               priority
-              unoptimized
               sizes="(max-width: 768px) 100vw, 1200px"
               style={{
                 objectFit: "cover",
@@ -380,7 +379,6 @@ export default async function CasinoDetailPage({
                           sizes="112px"
                           fetchPriority="low"
                           style={{ objectFit: "cover" }}
-                          unoptimized
                         />
                       </Box>
                     )}

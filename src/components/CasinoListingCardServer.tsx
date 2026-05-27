@@ -134,7 +134,6 @@ export function CasinoListingCardServer({
             src={featureSrc}
             alt={casino.casinoName}
             fill
-            unoptimized
             loading="lazy"
             quality={70}
             sizes="(max-width: 768px) 100vw, 300px"

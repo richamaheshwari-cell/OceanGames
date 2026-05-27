@@ -111,23 +111,19 @@ export function UnderstandingCasinoBonuses() {
                 >
                   <Icon sx={{ fontSize: 24 }} />
                 </Box>
-                <Typography
-                  variant="subtitle1"
-                  sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}
-                >
+                <Box sx={{ mb: 0.5 }}>
                   <Typography
                     component="h3"
                     variant="h3"
                     sx={{
                       fontWeight: 700,
-                      mb: 0.5,
                       color: "grey.900",
                       fontSize: { xs: "1.25rem", md: "1.5rem" },
                     }}
                   >
                     {card.title}
                   </Typography>
-                </Typography>
+                </Box>
                 <Typography variant="body2" color="text.secondary">
                   {card.desc}
                 </Typography>
@@ -157,23 +153,19 @@ export function UnderstandingCasinoBonuses() {
             }}
           />
           <Box>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}
-            >
+            <Box sx={{ mb: 0.5 }}>
               <Typography
                 component="h3"
                 variant="h3"
                 sx={{
                   fontWeight: 700,
-                  mb: 0.5,
                   color: "grey.900",
                   fontSize: { xs: "1.25rem", md: "1.5rem" },
                 }}
               >
                 Pro Tip
               </Typography>
-            </Typography>
+            </Box>
             <Typography variant="body2" color="text.secondary">
               Always start with bonuses that have lower wagering requirements
               and longer expiration periods. This gives you more time and better

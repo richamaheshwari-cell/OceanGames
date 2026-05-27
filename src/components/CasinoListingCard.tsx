@@ -1,13 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import {
-  Box,
-  Typography,
-  Button,
-  Chip,
-  Stack,
-} from "@mui/material";
+import { Box, Typography, Button, Chip, Stack } from "@mui/material";
 import OpenInNew from "@mui/icons-material/OpenInNew";
 import Check from "@mui/icons-material/Check";
 import Star from "@mui/icons-material/Star";
@@ -43,7 +37,9 @@ export const CASINO_CARD_WIDTH = 300;
 
 function imgUrl(path: string | null | undefined) {
   if (!path) return null;
-  const candidate = path.startsWith("http") ? path : `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+  const candidate = path.startsWith("http")
+    ? path
+    : `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
   return normalizeImageUrl(candidate);
 }
 
@@ -60,7 +56,13 @@ function StarRow({ rating }: { rating: number }) {
         const sx = { fontSize: "1.05rem", color: STAR_COLOR };
         if (kind === "full") return <Star key={i} sx={sx} aria-hidden />;
         if (kind === "half") return <StarHalf key={i} sx={sx} aria-hidden />;
-        return <StarBorder key={i} sx={{ ...sx, color: "rgba(255,255,255,0.45)" }} aria-hidden />;
+        return (
+          <StarBorder
+            key={i}
+            sx={{ ...sx, color: "rgba(255,255,255,0.45)" }}
+            aria-hidden
+          />
+        );
       })}
     </Stack>
   );
@@ -114,7 +116,6 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
             alt=""
             fill
             sizes={`${CASINO_CARD_WIDTH}px`}
-            unoptimized
             style={{ objectFit: "cover", opacity: 0.18 }}
           />
         )}
@@ -122,7 +123,8 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
           sx={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)",
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 100%)",
           }}
         />
         <Box
@@ -147,9 +149,18 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
           >
             {casino.casinoName}
           </Typography>
-          <Stack direction="row" alignItems="center" spacing={1} flexWrap="wrap" justifyContent="flex-start">
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            flexWrap="wrap"
+            justifyContent="flex-start"
+          >
             <StarRow rating={rating} />
-            <Typography component="span" sx={{ color: "white", fontWeight: 700, fontSize: "0.9rem" }}>
+            <Typography
+              component="span"
+              sx={{ color: "white", fontWeight: 700, fontSize: "0.9rem" }}
+            >
               {rating > 0 ? rating.toFixed(1) : "—"}
             </Typography>
           </Stack>
@@ -157,7 +168,15 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
       </Box>
 
       {/* Stats + tags + actions */}
-      <Box sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
+      <Box
+        sx={{
+          p: 2,
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+        }}
+      >
         <Stack direction="row" spacing={1.25} sx={{ mb: 1.5 }}>
           <Box
             sx={{
@@ -169,10 +188,24 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
               p: 1.25,
             }}
           >
-            <Typography variant="caption" sx={{ display: "block", color: "text.secondary", fontWeight: 500 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                fontWeight: 500,
+              }}
+            >
               Welcome Bonus
             </Typography>
-            <Typography sx={{ color: ACCENT_RED, fontWeight: 800, fontSize: "1.05rem", lineHeight: 1.2 }}>
+            <Typography
+              sx={{
+                color: ACCENT_RED,
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                lineHeight: 1.2,
+              }}
+            >
               {casino.bonusAmt ?? "—"}
             </Typography>
           </Box>
@@ -186,21 +219,49 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
               p: 1.25,
             }}
           >
-            <Typography variant="caption" sx={{ display: "block", color: "text.secondary", fontWeight: 500 }}>
+            <Typography
+              variant="caption"
+              sx={{
+                display: "block",
+                color: "text.secondary",
+                fontWeight: 500,
+              }}
+            >
               Games
             </Typography>
-            <Typography sx={{ color: ACCENT_RED, fontWeight: 800, fontSize: "1.05rem", lineHeight: 1.2 }}>
+            <Typography
+              sx={{
+                color: ACCENT_RED,
+                fontWeight: 800,
+                fontSize: "1.05rem",
+                lineHeight: 1.2,
+              }}
+            >
               {gamesLabel}
             </Typography>
           </Box>
         </Stack>
 
-        <Stack direction="row" flexWrap="wrap" gap={0.75} sx={{ mb: 2, flex: 1,alignContent: "flex-start", }}>
+        <Stack
+          direction="row"
+          flexWrap="wrap"
+          gap={0.75}
+          sx={{ mb: 2, flex: 1, alignContent: "flex-start" }}
+        >
           {(casino.tags ?? []).slice(0, 3).map((t) => (
             <Chip
               key={t}
               size="small"
-              icon={<Check sx={{ fontSize: 16, color: `${ACCENT_RED} !important`, flexShrink: 0 }} aria-hidden />}
+              icon={
+                <Check
+                  sx={{
+                    fontSize: 16,
+                    color: `${ACCENT_RED} !important`,
+                    flexShrink: 0,
+                  }}
+                  aria-hidden
+                />
+              }
               label={t}
               sx={{
                 bgcolor: TAG_BG,
@@ -214,7 +275,12 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
           ))}
         </Stack>
 
-        <Stack direction="row" spacing={1} alignItems="stretch" sx={{ mt: "auto", pt: 0.5 }}>
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="stretch"
+          sx={{ mt: "auto", pt: 0.5 }}
+        >
           {canVisit && visitHref ? (
             <Button
               component="a"
@@ -248,7 +314,11 @@ export function CasinoListingCard({ casino }: { casino: CasinoItem }) {
               borderColor: ACCENT_RED,
               color: ACCENT_RED,
               borderWidth: 2,
-              "&:hover": { borderWidth: 2, borderColor: ACCENT_RED, bgcolor: "rgba(220,38,38,0.04)" },
+              "&:hover": {
+                borderWidth: 2,
+                borderColor: ACCENT_RED,
+                bgcolor: "rgba(220,38,38,0.04)",
+              },
             }}
           >
             Details

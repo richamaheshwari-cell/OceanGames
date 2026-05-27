@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Box, Container, Typography, Stack } from "@mui/material";
 import { SITE_URL } from "@/lib/seo";
 import { FooterNewsletter } from "./FooterNewsletter";
+import "./style.css";
 
 const QUICK_LINKS = [
   { label: "Casinos", href: "/casinos" },
@@ -46,14 +47,7 @@ export function Footer() {
         >
           {/* Logo + Description */}
           <Box>
-            <Link
-              href="/"
-              style={{
-                display: "inline-block",
-                textDecoration: "none",
-                marginBottom: 0,
-              }}
-            >
+            <Link href="/" className="footer-logo-description">
               <Box
                 component="img"
                 src={`${SITE_URL}/tog_logo.svg`}
@@ -95,7 +89,7 @@ export function Footer() {
 
             <Stack spacing={1}>
               {QUICK_LINKS.map(({ label, href }) => (
-                <Link href={href} key={href} style={{ textDecoration: "none" }}>
+                <Link href={href} key={href} className="common-text-decoration">
                   <Typography
                     variant="body2"
                     sx={{
@@ -128,7 +122,7 @@ export function Footer() {
 
             <Stack spacing={1}>
               {INFO_LINKS.map(({ label, href }) => (
-                <Link href={href} key={href} style={{ textDecoration: "none" }}>
+                <Link href={href} key={href} className="common-text-decoration">
                   <Typography
                     variant="body2"
                     sx={{

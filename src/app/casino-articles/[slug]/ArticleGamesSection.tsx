@@ -143,7 +143,6 @@ export async function ArticleGamesSection() {
                         alt={game.title}
                         width={240}
                         height={180}
-                        unoptimized
                         loading="lazy"
                         decoding="async"
                         sizes="220px"

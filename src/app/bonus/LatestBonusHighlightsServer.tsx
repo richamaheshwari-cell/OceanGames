@@ -203,8 +203,7 @@ export async function LatestBonusHighlightsServer({
             items.map((article) => {
               const img = normalizeImageUrl(article.featureImg) ?? null;
               const href = `${SITE_URL}${article.href ?? `/bonus-articles/${article.slug}`}`;
-
-              return (
+               return (
                 <Box
                   key={article.id}
                   component="a"
