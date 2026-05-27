@@ -118,7 +118,7 @@ export async function GamesSection() {
                   </Link>
                   <Box sx={{ p: 2, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
                     <Link href={`/games/${game.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
+                      <Typography component="h3" variant="h3" sx={{ fontWeight: 700, mb: 1, fontSize: { xs: '1.25rem', md: '1.5rem' } }}>
                         {game.title}
                       </Typography>
                     </Link>

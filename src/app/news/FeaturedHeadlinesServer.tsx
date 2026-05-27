@@ -239,14 +239,12 @@ export async function FeaturedHeadlinesServer({
                       </Box>
                     </Box>
                     <Typography
-                      variant="subtitle1"
+                      component="h3"
+                      variant="h3"
                       sx={{
                         fontWeight: 700,
                         mb: 1,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
+                        fontSize: { xs: "1.25rem", md: "1.2rem" },
                       }}
                     >
                       {article.title}

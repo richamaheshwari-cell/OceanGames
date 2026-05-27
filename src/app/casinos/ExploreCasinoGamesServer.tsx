@@ -18,7 +18,9 @@ type ExploreCasinoGamesServerProps = {
   limit?: number;
 };
 
-export async function ExploreCasinoGamesServer({ limit = 5 }: ExploreCasinoGamesServerProps = {}) {
+export async function ExploreCasinoGamesServer({
+  limit = 5,
+}: ExploreCasinoGamesServerProps = {}) {
   let items: GameItem[] = [];
   try {
     const res = await fetch(`${API_PUBLIC}/games?page=1&limit=${limit}`, {
@@ -34,25 +36,55 @@ export async function ExploreCasinoGamesServer({ limit = 5 }: ExploreCasinoGames
   return (
     <Box component="section" sx={{ py: 6, px: 2, bgcolor: "#fafafa" }}>
       <Box sx={{ maxWidth: 1280, mx: "auto" }}>
-        <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: 2, mb: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 2,
+            mb: 4,
+          }}
+        >
           <Box>
-            <Typography variant="h4" sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}>
-              Explore Casino <Box component="span" sx={{ color: "primary.main" }}>Games</Box>
+            <Typography
+              variant="h4"
+              sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}
+            >
+              Explore Casino{" "}
+              <Box component="span" sx={{ color: "primary.main" }}>
+                Games
+              </Box>
             </Typography>
-            <Typography variant="body2" color="text.secondary">Discover the most popular and exciting casino games</Typography>
+            <Typography variant="body2" color="text.secondary">
+              Discover the most popular and exciting casino games
+            </Typography>
           </Box>
           <Button
             component="a"
             href={`${SITE_URL}/games`}
             variant="contained"
-            sx={{ bgcolor: "grey.900", color: "white", fontWeight: 600, "&:hover": { bgcolor: "grey.800" } }}
+            sx={{
+              bgcolor: "grey.900",
+              color: "white",
+              fontWeight: 600,
+              "&:hover": { bgcolor: "grey.800" },
+            }}
             endIcon={<ArrowForward />}
           >
             View All Games
           </Button>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "stretch", gap: 2.25, flexWrap: "wrap", justifyContent: { xs: "center", md: "flex-start" } }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "stretch",
+            gap: 2.25,
+            flexWrap: "wrap",
+            justifyContent: { xs: "center", md: "flex-start" },
+          }}
+        >
           {items.map((game) => {
             const img = normalizeImageUrl(game.featureImg) ?? null;
             const detailsHref = `${SITE_URL}/games/${game.slug}`;
@@ -91,7 +123,13 @@ export async function ExploreCasinoGamesServer({ limit = 5 }: ExploreCasinoGames
                       }}
                     />
                   ) : (
-                    <Box sx={{ width: "100%", height: "100%", bgcolor: "grey.300" }} />
+                    <Box
+                      sx={{
+                        width: "100%",
+                        height: "100%",
+                        bgcolor: "grey.300",
+                      }}
+                    />
                   )}
                   <Box
                     sx={{
@@ -110,9 +148,32 @@ export async function ExploreCasinoGamesServer({ limit = 5 }: ExploreCasinoGames
                     {chip}
                   </Box>
                 </Box>
-                <Box sx={{ p: 1.5, flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>{game.title}</Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ flex: 1, mb: 0 }}>{game.tag ?? "Casino Game"}</Typography>
+                <Box
+                  sx={{
+                    p: 1.5,
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    minHeight: 0,
+                  }}
+                >
+                  <Typography
+                    component="h3"
+                    variant="h3"
+                    sx={{
+                      fontWeight: 700,
+                      fontSize: { xs: "1.25rem", md: "1.5rem" },
+                    }}
+                  >
+                    {game.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ flex: 1, mb: 0 }}
+                  >
+                    {game.tag ?? "Casino Game"}
+                  </Typography>
                   <Box sx={{ display: "flex", gap: 1, mt: "auto", pt: 1.25 }}>
                     {playHref ? (
                       <Button
@@ -146,4 +207,3 @@ export async function ExploreCasinoGamesServer({ limit = 5 }: ExploreCasinoGames
     </Box>
   );
 }
-

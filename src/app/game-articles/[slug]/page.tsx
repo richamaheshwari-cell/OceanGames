@@ -647,7 +647,14 @@ export default async function GameArticlePage({
                       )}
                     </Box>
                     <Box sx={{ p: 1.5 }}>
-                      <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                      <Typography
+                        component="h3"
+                        variant="h3"
+                        sx={{
+                          fontWeight: 700,
+                          fontSize: { xs: "1.25rem", md: "1.5rem" },
+                        }}
+                      >
                         {game.title}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">

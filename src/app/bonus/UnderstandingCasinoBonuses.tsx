@@ -51,15 +51,37 @@ export function UnderstandingCasinoBonuses() {
     <Box component="section" sx={{ py: 6, px: 2, bgcolor: "background.paper" }}>
       <Box sx={{ maxWidth: 1280, mx: "auto" }}>
         <Box sx={{ textAlign: "center", mb: 4 }}>
-          <Typography variant="h4" sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}>
-            Understanding Casino <Box component="span" sx={{ color: "primary.main" }}>Bonuses</Box>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 700, color: "grey.900", mb: 0.5 }}
+          >
+            Understanding Casino{" "}
+            <Box component="span" sx={{ color: "primary.main" }}>
+              Bonuses
+            </Box>
           </Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 560, mx: "auto" }}>
-            Everything you need to know about casino bonuses, wagering requirements, and how to maximize your rewards
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ maxWidth: 560, mx: "auto" }}
+          >
+            Everything you need to know about casino bonuses, wagering
+            requirements, and how to maximize your rewards
           </Typography>
         </Box>
 
-        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "repeat(3, 1fr)" }, gap: 2, mb: 4 }}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "1fr 1fr",
+              md: "repeat(3, 1fr)",
+            },
+            gap: 2,
+            mb: 4,
+          }}
+        >
           {CARDS.map((card) => {
             const Icon = card.icon;
             return (
@@ -89,8 +111,22 @@ export function UnderstandingCasinoBonuses() {
                 >
                   <Icon sx={{ fontSize: 24 }} />
                 </Box>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}>
-                  {card.title}
+                <Typography
+                  variant="subtitle1"
+                  sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}
+                >
+                  <Typography
+                    component="h3"
+                    variant="h3"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 0.5,
+                      color: "grey.900",
+                      fontSize: { xs: "1.25rem", md: "1.5rem" },
+                    }}
+                  >
+                    {card.title}
+                  </Typography>
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {card.desc}
@@ -112,15 +148,38 @@ export function UnderstandingCasinoBonuses() {
             borderColor: "primary.main",
           }}
         >
-          <Lightbulb sx={{ color: "primary.main", fontSize: 28, flexShrink: 0, mt: 0.25 }} />
+          <Lightbulb
+            sx={{
+              color: "primary.main",
+              fontSize: 28,
+              flexShrink: 0,
+              mt: 0.25,
+            }}
+          />
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}>
-              Pro Tip
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 700, mb: 0.5, color: "grey.900" }}
+            >
+              <Typography
+                component="h3"
+                variant="h3"
+                sx={{
+                  fontWeight: 700,
+                  mb: 0.5,
+                  color: "grey.900",
+                  fontSize: { xs: "1.25rem", md: "1.5rem" },
+                }}
+              >
+                Pro Tip
+              </Typography>
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Always start with bonuses that have lower wagering requirements and longer expiration periods. This gives you more
-              time and better odds to meet the conditions and withdraw your winnings. Read the terms carefully and choose games
-              with higher RTP to maximize your chances.
+              Always start with bonuses that have lower wagering requirements
+              and longer expiration periods. This gives you more time and better
+              odds to meet the conditions and withdraw your winnings. Read the
+              terms carefully and choose games with higher RTP to maximize your
+              chances.
             </Typography>
           </Box>
         </Box>

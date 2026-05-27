@@ -223,14 +223,13 @@ export async function AllCasinoArticlesServer({
                       </Box>
 
                       <Typography
-                        variant="subtitle1"
+                        component="h3"
+                        variant="h3"
                         sx={{
                           fontWeight: 700,
                           mb: 0.5,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
+                          color: "grey.900",
+                          fontSize: { xs: "1.25rem", md: "1.2rem" },
                         }}
                       >
                         {article.title}

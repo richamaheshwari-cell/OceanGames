@@ -262,7 +262,8 @@ export async function LatestCasinoInsightsServer({
 
                     <Box sx={{ p: 2 }}>
                       <Typography
-                        variant="subtitle1"
+                        component="h3"
+                        variant="h3"
                         sx={{
                           fontWeight: 700,
                           mb: 0.5,
@@ -271,6 +272,7 @@ export async function LatestCasinoInsightsServer({
                           WebkitLineClamp: 2,
                           WebkitBoxOrient: "vertical",
                           overflow: "hidden",
+                          fontSize: { xs: "1.25rem", md: "1.5rem" },
                         }}
                       >
                         {article.title}
