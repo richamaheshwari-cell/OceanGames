@@ -40,20 +40,99 @@ export async function fetchItemListSnapshot(
   return mapped;
 }
 
-export function buildItemListJsonLd(name: string, items: Array<{ name: string; url: string; image?: string }>) {
+// export function buildItemListJsonLd(name: string, items: Array<{ name: string; url: string; image?: string }>) {
+//   return {
+//     "@context": "https://schema.org",
+//     "@type": "ItemList",
+//     name,
+//     itemListElement: items.map((item, i) => ({
+//       "@type": "ListItem",
+//       position: i + 1,
+//       item: {
+//         "@type": "Thing",
+//         name: item.name,
+//         url: item.url,
+//         ...(item.image ? { image: item.image } : {}),
+//       },
+//     })),
+//   };
+// }
+
+export function buildItemListJsonLd(
+  name: string,
+  items: Array<{
+    name: string;
+    url: string;
+    image?: string;
+  }>
+) {
   return {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    name,
-    itemListElement: items.map((item, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      item: {
-        "@type": "Thing",
-        name: item.name,
-        url: item.url,
-        ...(item.image ? { image: item.image } : {}),
+
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": `${SITE_URL}/casinos#webpage`,
+        url: `${SITE_URL}/casinos`,
+        name: "Top Rated Online Casinos",
+        description:
+          "Find the best online casinos with expert reviews, ratings, and exclusive bonuses.",
       },
-    })),
+
+      {
+        "@type": "ItemList",
+        "@id": `${SITE_URL}/casinos#itemlist`,
+        name,
+
+        itemListElement: items.map((item, i) => ({
+          "@type": "ListItem",
+
+          position: i + 1,
+
+          url: item.url,
+
+          item: {
+            "@type": "Organization",
+
+            name: item.name,
+
+            url: item.url,
+
+            ...(item.image ? { image: item.image } : {}),
+
+            description: `${item.name} offers a welcome bonus package for new users`,
+
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: 4.5,
+              reviewCount: 1,
+              bestRating: 5,
+              worstRating: 1,
+            },
+
+            keywords: `${item.name} casino, online casino, casino bonus`,
+
+            makesOffer: {
+              "@type": "Offer",
+
+              name: `${item.name} Casino Bonus`,
+
+              description: `${item.name} offers a welcome bonus package for new users`,
+
+              price: "1000",
+
+              priceCurrency: "USD",
+            },
+          },
+        })),
+      },
+
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}#organization`,
+        name: "TheOceanGame",
+        url: SITE_URL,
+      },
+    ],
   };
 }

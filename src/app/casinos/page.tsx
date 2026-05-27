@@ -37,19 +37,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function CasinosPage({ searchParams }: PageProps) {
-  const params = await searchParams ?? {};
+  const params = (await searchParams) ?? {};
   const page = readPageParam(params.page, 1);
   const snapshot = await fetchItemListSnapshot(ENDPOINTS.casinos, "casinos", 8);
 
   return (
     <>
-      <JsonLdScript
+      {/* <JsonLdScript
         data={buildCollectionJsonLd({
           name: TITLE,
           url: "/casinos",
           description: DESC,
         })}
-      />
+      /> */}
       <JsonLdScript
         data={buildBreadcrumbJsonLd([
           { name: "Home", url: "/" },

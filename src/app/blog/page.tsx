@@ -37,7 +37,14 @@ async function getCmsSeo(slug: string): Promise<CmsSeoRecord | null> {
   return (json.data ?? json) as CmsSeoRecord;
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams?: Promise<QueryMap>;
+}): Promise<Metadata> {
+  const params = (await searchParams) ?? {};
+  const blogsPage = readPageParam(params.blogsPage, 1);
+
   const cms = await getCmsSeo("blog");
 
   const title = cms?.seoTitle?.trim() || TITLE;
@@ -47,7 +54,13 @@ export async function generateMetadata(): Promise<Metadata> {
     cms?.seoImage ?? cms?.featureImg ?? cms?.image,
   );
 
+  const pageUrl = blogsPage > 1 ? `/blog?blogsPage=${blogsPage}` : "/blog";
+
   return {
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com",
+    ),
+
     title,
     description,
 
@@ -63,20 +76,19 @@ export async function generateMetadata(): Promise<Metadata> {
       },
     },
 
-    keywords: Array.isArray(cms?.focusKeywords)
-      ? cms?.focusKeywords
-      : undefined,
+    keywords: Array.isArray(cms?.focusKeywords) ? cms.focusKeywords : undefined,
 
-    alternates: buildLocaleAlternates("/blog"),
-
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com",
-    ),
+    alternates:
+      blogsPage > 1
+        ? {
+            canonical: pageUrl,
+          }
+        : buildLocaleAlternates("/blog"),
 
     openGraph: buildOpenGraph({
       title,
       description,
-      url: "/blog",
+      url: pageUrl,
       image: ogImage ?? undefined,
       type: "website",
     }),

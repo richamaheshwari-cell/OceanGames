@@ -11,7 +11,7 @@
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
 /** Revalidate SEO page data every N seconds (short cache, fewer backend calls). */
-export const SEO_CACHE_REVALIDATE_SECONDS = 60;
+export const SEO_CACHE_REVALIDATE_SECONDS = 600;
 export const API_PUBLIC = `${API_BASE}/api/v1/public`;
 
 export const ENDPOINTS = {
@@ -58,7 +58,10 @@ export type ApiSuccess<T> = { data: T };
 export type ApiError = { error: { code: string; message: string; details?: object } };
 
 export async function publicFetch<T>(url: string, init?: RequestInit): Promise<ApiSuccess<T>> {
-  const res = await fetch(url, init);
+  const res = await fetch(url, { ...init, next: {
+      revalidate: SEO_CACHE_REVALIDATE_SECONDS,
+      ...(init as any)?.next,
+    },});
   const json = await res.json();
   if (!res.ok) throw new Error((json as ApiError).error?.message ?? "Request failed");
   return json as ApiSuccess<T>;
