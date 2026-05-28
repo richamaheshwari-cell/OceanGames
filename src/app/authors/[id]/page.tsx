@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Box, Typography } from "@mui/material";
-import CalendarToday from "@mui/icons-material/CalendarToday";
-import Schedule from "@mui/icons-material/Schedule";
-import ArrowForward from "@mui/icons-material/ArrowForward";
+import { AuthorHero } from "@/components/author/AuthorHero";
+import { AuthorStats } from "@/components/author/AuthorStats";
+import { AuthorSectionGrid } from "@/components/author/AuthorSectionGrid";
+import { AuthorBreadcrumbs } from "@/components/author/AuthorBreadcrumbs";
 import { API_BASE, ENDPOINTS, SEO_CACHE_REVALIDATE_SECONDS } from "@/lib/api";
 import { BreadcrumbNav } from "@/components/BreadcrumbNav";
 import { JsonLdScript } from "@/components/JsonLd";
@@ -19,15 +19,14 @@ import { readPageParam, type QueryMap } from "@/lib/pagination-query";
 import { normalizeImageUrl } from "@/lib/image-url";
 
 type AuthorStats = {
-  pagesCreated?: number;
-  casinosCreated?: number;
-  casinoArticlesCreated?: number;
-  gamesCreated?: number;
-  gameArticlesCreated?: number;
-  blogsCreated?: number;
-  newsCreated?: number;
-  bonusesCreated?: number;
-  bonusArticlesCreated?: number;
+  casinos?: number;
+  casinoArticles?: number;
+  games?: number;
+  gameArticles?: number;
+  blogs?: number;
+  news?: number;
+  bonuses?: number;
+  bonusArticles?: number;
 };
 
 type AuthorProfile = {
@@ -36,6 +35,15 @@ type AuthorProfile = {
   bio?: string | null;
   email?: string | null;
   stats?: AuthorStats | null;
+  sections?: {
+    casinos?: any[];
+    casinoArticles?: any[];
+    gameArticles?: any[];
+    blogs?: any[];
+    news?: any[];
+    bonusArticles?: any[];
+    bonuses?: any[];
+  };
 };
 
 type AuthorTab =
@@ -97,10 +105,10 @@ function readTab(raw: string | string[] | undefined): AuthorTab {
 function getAggregatedStats(stats: AuthorStats | null | undefined) {
   const s = stats ?? {};
   return {
-    Casino: (s.casinosCreated ?? 0) + (s.casinoArticlesCreated ?? 0),
-    Bonus: (s.bonusesCreated ?? 0) + (s.bonusArticlesCreated ?? 0),
-    Blog: s.blogsCreated ?? 0,
-    News: s.newsCreated ?? 0,
+    Casino: (s.casinos ?? 0) + (s.casinoArticles ?? 0),
+    Bonus: (s.bonuses ?? 0) + (s.bonusArticles ?? 0),
+    Blog: s.blogs ?? 0,
+    News: s.news ?? 0,
   };
 }
 
@@ -141,15 +149,15 @@ function postHref(type: Exclude<AuthorTab, "all">, slug: string) {
 
 function hrefForTab(authorName: string, tab: AuthorTab) {
   const encodedName = encodeURIComponent(authorName.toLowerCase());
-  if (tab === "all") return `/authors/${encodedName}`;
-  return `/authors/${encodedName}?${TAB_QUERY_KEY}=${tab}`;
+  if (tab === "all") return `/authors/test/${encodedName}`;
+  return `/authors/test/${encodedName}?${TAB_QUERY_KEY}=${tab}`;
 }
 
-// Fetch author by name using the new API endpoint
+// Fetch author by name using the correct API endpoint and preserve case
 async function getAuthorByName(name: string): Promise<AuthorProfile | null> {
   try {
-    const encodedName = encodeURIComponent(name.toLowerCase());
-    const url = `${API_BASE}/author/${encodedName}`;
+    // Use API_PUBLIC and preserve case
+    const url = `${API_BASE}/api/v1/public/author/test/${encodeURIComponent(name)}`;
     const res = await fetch(url);
     if (!res.ok) return null;
     const json = await res.json();
@@ -271,36 +279,43 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
   searchParams: Promise<QueryMap>;
 }): Promise<Metadata> {
-  const { id: nameParam } = await params;
+  const { id } = await params;
   const qp = await searchParams;
   const tab = readTab(qp[TAB_QUERY_KEY]);
-  const author = await getAuthorByName(nameParam);
+  const author = await getAuthorByName(id);
   if (!author) return { title: "Author | TheOceanGame" };
+  // Use slug (lowercase name) for canonical and schema URLs
+  const slug = encodeURIComponent(author.name.toLowerCase());
+  const canonicalUrl = `/authors/${slug}`;
   const tabSuffix =
     tab === "all"
       ? ""
-      : ` - ${TABS.find((t) => t.key === tab)?.label ?? "Posts"}`;
-  const title = `${author.name}${tabSuffix} | Author | TheOceanGame`;
+      : ` – ${TABS.find((t) => t.key === tab)?.label ?? "Posts"}`;
+  // Improved title format
+  const title = `${author.name} – Casino & Sports Betting Expert | TheOceanGame`;
   const desc =
     author.bio ??
     `View profile and articles by ${author.name} on TheOceanGame.`;
-  const url = `/authors/${encodeURIComponent(author.name.toLowerCase())}`;
   return {
     title,
     description: desc,
-    alternates: buildLocaleAlternates(url),
+    alternates: buildLocaleAlternates(canonicalUrl),
     metadataBase: new URL(
       process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com",
     ),
     authors: [
       {
         name: author.name,
-        url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com"}${url}`,
+        url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com"}${canonicalUrl}`,
       },
     ],
-    openGraph: { type: "profile", title, description: desc, url },
+    openGraph: { type: "profile", title, description: desc, url: canonicalUrl },
     twitter: { card: "summary", title, description: desc },
     robots: { index: true, follow: true },
+    // Canonical link
+    other: {
+      canonical: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://theoceangame.com"}${canonicalUrl}`,
+    },
   };
 }
 
@@ -321,24 +336,13 @@ export default async function AuthorProfilePage({
 
   if (!author) notFound();
 
-  const avatarSrc = imgSrc(author.avatarUrl);
-  const initial = author.name?.trim().charAt(0).toUpperCase() || "?";
   const stats = getAggregatedStats(author.stats);
   const encodedName = encodeURIComponent(author.name.toLowerCase());
   const authorUrl = `/authors/${encodedName}`;
-  const {
-    items: feedItems,
-    totalPages,
-    safePage,
-  } = await getAuthorFeed(author.name.toLowerCase(), tab, page);
-  const breadcrumbItems = [
-    { name: "Home", url: "/" },
-    { name: "Authors", url: "/" },
-    { name: author.name, url: authorUrl },
-  ];
 
   return (
     <>
+      {/* Schema: use slug-based URL for ProfilePage and BreadcrumbList */}
       <JsonLdScript
         data={buildAuthorJsonLd({
           id: author.name,
@@ -347,60 +351,30 @@ export default async function AuthorProfilePage({
           image: author.avatarUrl,
         })}
       />
-      <JsonLdScript data={buildBreadcrumbJsonLd(breadcrumbItems)} />
+      <JsonLdScript
+        data={buildBreadcrumbJsonLd([
+          { name: "Home", url: "/" },
+          { name: "Authors", url: "/authors" },
+          {
+            name: author.name,
+            url: `/authors/${encodeURIComponent(author.name.toLowerCase())}`,
+          },
+        ])}
+      />
 
       {/* Hero: no card, full-width dark section */}
-      <Box
-        sx={{
-          position: "relative",
-          minHeight: { xs: 280, md: 320 },
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-          background:
-            "linear-gradient(135deg, #8b1538 0%, #5c0e25 50%, #1a0a0f 100%)",
-        }}
-      >
-        <Box
-          sx={{ position: "relative", zIndex: 1, textAlign: "center", px: 2 }}
-        >
-          <Box
-            sx={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 0.5,
-              bgcolor: "primary.main",
-              color: "white",
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 3,
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              mb: 1.5,
-            }}
-          >
-            AUTHOR PROFILE
-          </Box>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: { xs: "2rem", md: "2.5rem" },
-              fontWeight: 700,
-              color: "white",
-            }}
-          >
-            {author.name}
-          </Typography>
-        </Box>
-      </Box>
 
-      <BreadcrumbNav items={breadcrumbItems} />
+      <AuthorHero
+        name={author.name}
+        avatarUrl={author.avatarUrl}
+        bio={author.bio}
+        email={author.email}
+      />
 
-      {/* Author details: no card, direct layout */}
       <Box
         sx={{ maxWidth: 1200, mx: "auto", px: { xs: 2, sm: 3, md: 4 }, py: 4 }}
       >
+        <AuthorBreadcrumbs authorName={author.name} authorSlug={encodedName} />
         <Box
           sx={{
             display: "flex",
@@ -409,63 +383,7 @@ export default async function AuthorProfilePage({
             alignItems: "flex-start",
           }}
         >
-          {/* Left: avatar + name + bio */}
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 3, mb: 3 }}>
-              <Box
-                sx={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: 3,
-                  overflow: "hidden",
-                  flexShrink: 0,
-                  bgcolor: "primary.main",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {avatarSrc ? (
-                  <Image
-                    src={avatarSrc}
-                    alt={author.name}
-                    width={120}
-                    height={120}
-                    style={{ objectFit: "cover" }}
-                    unoptimized
-                  />
-                ) : (
-                  <Typography
-                    sx={{ fontSize: "3rem", fontWeight: 700, color: "white" }}
-                  >
-                    {initial}
-                  </Typography>
-                )}
-              </Box>
-              <Box>
-                <Typography
-                  variant="h2"
-                  sx={{ fontSize: "1.75rem", fontWeight: 700, mb: 0.5 }}
-                >
-                  {author.name}
-                </Typography>
-                {author.email && (
-                  <Typography
-                    component="a"
-                    href={`mailto:${author.email}`}
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "primary.main",
-                      textDecoration: "none",
-                      "&:hover": { textDecoration: "underline" },
-                    }}
-                  >
-                    {author.email}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-
             {author.bio && (
               <Typography
                 sx={{
@@ -478,256 +396,62 @@ export default async function AuthorProfilePage({
               </Typography>
             )}
           </Box>
-
-          {/* Right: 4 stats, no card containers */}
-          <Box
-            sx={{ display: "flex", flexWrap: "wrap", gap: 2, flexShrink: 0 }}
-          >
-            {AGGREGATED_STAT_KEYS.map((label) => (
-              <Box key={label} sx={{ textAlign: "center", minWidth: 80 }}>
-                <Typography
-                  sx={{
-                    fontSize: "2rem",
-                    fontWeight: 700,
-                    color: "text.primary",
-                    lineHeight: 1.2,
-                  }}
-                >
-                  {stats[label]}
-                </Typography>
-                <Typography
-                  sx={{
-                    fontSize: "0.8rem",
-                    color: "text.secondary",
-                    fontWeight: 500,
-                  }}
-                >
-                  {label}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Box sx={{ mt: 5 }}>
-          <Typography
-            variant="h3"
-            sx={{
-              fontSize: { xs: "1.35rem", md: "1.6rem" },
-              fontWeight: 800,
-              mb: 2,
-            }}
-          >
-            Posts by {author.name}
-          </Typography>
-
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2.5 }}>
-            {TABS.map((tabItem) => {
-              const active = tabItem.key === tab;
-              return (
-                <Link
-                  key={tabItem.key}
-                  href={hrefForTab(author.name.toLowerCase(), tabItem.key)}
-                  style={{ textDecoration: "none" }}
-                >
-                  <Box
-                    component="span"
-                    sx={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      px: 1.5,
-                      py: 0.75,
-                      borderRadius: "999px",
-                      border: "1px solid",
-                      borderColor: active ? "primary.main" : "divider",
-                      bgcolor: active ? "primary.main" : "background.paper",
-                      color: active ? "primary.contrastText" : "text.primary",
-                      fontWeight: 700,
-                      fontSize: "0.82rem",
-                    }}
-                  >
-                    {tabItem.label}
-                  </Box>
-                </Link>
-              );
-            })}
-          </Box>
-
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                sm: "1fr 1fr",
-                lg: "repeat(4, 1fr)",
-              },
-              gap: 2,
-            }}
-          >
-            {feedItems.length > 0 ? (
-              feedItems.map((item) => {
-                const img = normalizeImageUrl(item.featureImg) ?? null;
-                const href = postHref(item.type, item.slug);
-                return (
-                  <Link
-                    key={`${item.type}-${item.id}`}
-                    href={href}
-                    style={{ textDecoration: "none", color: "inherit" }}
-                  >
-                    <Box
-                      sx={{
-                        bgcolor: "background.paper",
-                        borderRadius: 2,
-                        overflow: "hidden",
-                        border: "1px solid",
-                        borderColor: "divider",
-                        textDecoration: "none",
-                        color: "inherit",
-                        "&:hover": {
-                          borderColor: "primary.main",
-                          boxShadow: 2,
-                        },
-                        display: "block",
-                      }}
-                    >
-                      <Box sx={{ position: "relative", height: 150 }}>
-                        {img ? (
-                          <Box
-                            component="img"
-                            src={img}
-                            alt={item.title}
-                            sx={{
-                              position: "absolute",
-                              inset: 0,
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : (
-                          <Box
-                            sx={{
-                              width: "100%",
-                              height: "100%",
-                              bgcolor: "grey.300",
-                            }}
-                          />
-                        )}
-                      </Box>
-                      <Box sx={{ p: 2 }}>
-                        <Typography
-                          sx={{
-                            display: "inline-flex",
-                            mb: 0.75,
-                            px: 1,
-                            py: 0.25,
-                            borderRadius: 1,
-                            bgcolor: "rgba(198,40,40,0.08)",
-                            color: "primary.main",
-                            fontWeight: 700,
-                            fontSize: "0.7rem",
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          {TAB_LABELS[item.type]}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 1.25,
-                            mb: 1,
-                            color: "text.secondary",
-                            fontSize: "0.75rem",
-                            flexWrap: "wrap",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                            }}
-                          >
-                            <CalendarToday
-                              sx={{ fontSize: 14, color: "primary.main" }}
-                            />
-                            {formatPublishedDate(item.publishDate)}
-                          </Box>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 0.5,
-                            }}
-                          >
-                            <Schedule
-                              sx={{ fontSize: 14, color: "primary.main" }}
-                            />
-                            {item.readTime ?? "—"}
-                          </Box>
-                        </Box>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            fontWeight: 700,
-                            mb: 0.5,
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {item.title}
-                        </Typography>
-                        <Typography
-                          variant="body2"
-                          color="text.secondary"
-                          sx={{
-                            mb: 1,
-                            display: "-webkit-box",
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: "vertical",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {item.shortDesc ?? ""}
-                        </Typography>
-                        <Typography
-                          component="span"
-                          sx={{
-                            color: "primary.main",
-                            fontWeight: 700,
-                            fontSize: "0.85rem",
-                          }}
-                        >
-                          Read{" "}
-                          <ArrowForward
-                            sx={{ fontSize: 14, verticalAlign: "middle" }}
-                          />
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Link>
-                );
-              })
-            ) : (
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ gridColumn: "1 / -1", textAlign: "center", py: 3 }}
-              >
-                No posts found for this section.
-              </Typography>
-            )}
-          </Box>
-
-          <QueryPagination
-            page={safePage}
-            totalPages={totalPages}
-            queryKey={PAGE_QUERY_KEY}
+          <AuthorStats
+            stats={stats}
+            labels={AGGREGATED_STAT_KEYS as unknown as string[]}
           />
         </Box>
+
+        {/* Render each section if present using AuthorSectionGrid */}
+        {author.sections?.blogs?.length ? (
+          <AuthorSectionGrid
+            title="Latest Blogs"
+            items={author.sections.blogs}
+            hrefPrefix="blog"
+          />
+        ) : null}
+        {author.sections?.news?.length ? (
+          <AuthorSectionGrid
+            title="Latest News"
+            items={author.sections.news}
+            hrefPrefix="news"
+          />
+        ) : null}
+        {author.sections?.casinoArticles?.length ? (
+          <AuthorSectionGrid
+            title="Latest Casino Articles"
+            items={author.sections.casinoArticles}
+            hrefPrefix="casino-articles"
+          />
+        ) : null}
+        {author.sections?.gameArticles?.length ? (
+          <AuthorSectionGrid
+            title="Latest Game Articles"
+            items={author.sections.gameArticles}
+            hrefPrefix="game-articles"
+          />
+        ) : null}
+        {author.sections?.bonusArticles?.length ? (
+          <AuthorSectionGrid
+            title="Latest Bonus Articles"
+            items={author.sections.bonusArticles}
+            hrefPrefix="bonus-articles"
+          />
+        ) : null}
+        {author.sections?.casinos?.length ? (
+          <AuthorSectionGrid
+            title="Latest Casinos"
+            items={author.sections.casinos}
+            hrefPrefix="casinos"
+          />
+        ) : null}
+        {author.sections?.bonuses?.length ? (
+          <AuthorSectionGrid
+            title="Latest Bonuses"
+            items={author.sections.bonuses}
+            hrefPrefix="bonus"
+          />
+        ) : null}
       </Box>
     </>
   );

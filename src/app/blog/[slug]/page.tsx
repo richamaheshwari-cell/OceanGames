@@ -78,13 +78,16 @@ async function getArticle(slug: string): Promise<ArticleResponse | null> {
   let res = await fetch(`${base}/api/v1/public/blogs/${slug}`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
+  console.log("res get article", res);
   if (!res.ok) {
     res = await fetch(`${base}/api/v1/public/featuredBlogs/${slug}`, {
       next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
     });
+    console.log("res get article inside if block", res);
   }
   if (!res.ok) return null;
   const json = await res.json();
+  console.log("json get article", json);
   return (json.data ?? json) as ArticleResponse;
 }
 
@@ -94,8 +97,10 @@ async function getLatestBlogs(): Promise<RelatedItem[]> {
   const res = await fetch(`${base}/api/v1/public/blogs?page=1&limit=5`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
+  console.log("res get latest blogs", res);
   if (!res.ok) return [];
   const json = await res.json();
+  console.log("json get latest blogs", json);
   const data = json.data ?? json;
   return Array.isArray(data.items) ? data.items : [];
 }
@@ -106,8 +111,10 @@ async function getLatestNews(): Promise<RelatedItem[]> {
   const res = await fetch(`${base}/api/v1/public/news?page=1&limit=5`, {
     next: { revalidate: SEO_CACHE_REVALIDATE_SECONDS },
   });
+  console.log("res get latest news", res);
   if (!res.ok) return [];
   const json = await res.json();
+  console.log("json get latest news", json);
   const data = json.data ?? json;
   return Array.isArray(data.items) ? data.items : [];
 }
@@ -219,12 +226,15 @@ export default async function BlogArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  console.log("slug", slug);
   const [article, latestBlogs, latestNews] = await Promise.all([
     getArticle(slug),
     getLatestBlogs(),
     getLatestNews(),
   ]);
-
+  console.log("article", article);
+  console.log("latestBlogs", latestBlogs);
+  console.log("latestNews", latestNews);
   if (!article) notFound();
 
   const relatedArticleBlog =
@@ -247,6 +257,9 @@ export default async function BlogArticlePage({
     { name: "Blog", url: "/blog" },
     { name: h1Title, url: path },
   ];
+  console.log("editor", editor);
+  console.log("editor?.id", editor?.id);
+  console.log("editor?.name", editor?.name);
   return (
     <>
       <ReadingProgressBar />
@@ -364,7 +377,7 @@ export default async function BlogArticlePage({
             <EditIcon sx={{ fontSize: 18, color: "primary.main" }} />
             {editor?.id ? (
               <Link
-                href={`/authors/${encodeURIComponent(editor.name)}`}
+                href={`/authors/${editor.id}`}
                 style={{
                   fontSize: "0.875rem",
                   fontWeight: 500,

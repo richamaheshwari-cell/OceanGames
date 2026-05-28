@@ -9,7 +9,7 @@
  *   calls and reuse cache on back navigation. Search stays real-time + debounce.
  */
 
-export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
+export const API_BASE = "http://localhost:3000"; // process.env.NEXT_PUBLIC_API_URL ?? "https://api.theoceangame.com";
 /** Revalidate SEO page data every N seconds (short cache, fewer backend calls). */
 export const SEO_CACHE_REVALIDATE_SECONDS = 600;
 export const API_PUBLIC = `${API_BASE}/api/v1/public`;
