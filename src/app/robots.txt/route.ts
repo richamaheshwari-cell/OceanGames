@@ -1,19 +1,9 @@
-import { NextResponse } from "next/server";
 import { SITE_URL } from "@/lib/seo";
 
-export const GET = () => {
-  const content = `
-User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /_next/
-Disallow: /admin/
-Sitemap: ${SITE_URL}/sitemap.xml
-`.trim();
 
-  return new NextResponse(content, {
-    headers: {
-      "Content-Type": "text/plain",
-    },
-  });
-};
+export async function GET() {
+  return new Response(
+    `User-agent: *\nAllow: /\nDisallow: /api/\nDisallow: /admin/\nDisallow: /_next/\nSitemap: ${SITE_URL}/sitemap.xml\nSitemap: ${SITE_URL}/categories-sitemap.xml\nSitemap: ${SITE_URL}/blogs-sitemap.xml\nSitemap: ${SITE_URL}/news-sitemap.xml`,
+    { headers: { "Content-Type": "text/plain" } }
+  );
+}
